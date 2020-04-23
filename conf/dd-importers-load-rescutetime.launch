@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/dd-importers-load-rescutetime/src/main/java/com/maayalee/dd/importers/rescutetime/StarterPipeline.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.importers.rescutetime.StarterPipeline"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-api_key=B63kDUD_VyotkNTgc0jKalJhQGPdlbssw30P2kch&#13;&#10;-begin_date=2019-01-07&#13;&#10;-end_date=2019-01-07&#13;&#10;-output_directory=gs://datadriver-datalake/data/log/rescuetime&#13;&#10;-output_filenameprefix=20190107+9:00-&#13;&#10;-shard_size=3"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dd-importers-load-rescutetime"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Xms256m &#13;&#10;-Xmx4096m"/>
+</launchConfiguration>

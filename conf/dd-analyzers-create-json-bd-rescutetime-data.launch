@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+<listEntry value="/dd-analyzers-create-json-bd/src/main/java/com/maayalee/dd/analyzers/json/StarterPipeline.java"/>
+</listAttribute>
+<listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+<listEntry value="1"/>
+</listAttribute>
+<booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+<stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.analyzers.json.StarterPipeline"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--runner=DataflowRunner&#13;&#10;--project=rising-field-212511&#13;&#10;--tempLocation=gs://datadriver-dataflow/temp&#13;&#10;--inputFilePattern=gs://datadriver-datalake/data/log/rescuetime/20190404+9:00-*&#13;&#10;--timezone=Asia/Seoul&#13;&#10;--tableSchemaJSONPath=gs://datadriver-dataflow/rules/rescuetime_schemas_data.json&#13;&#10;--outputTable=rising-field-212511:dw_datadriver.rescuetime_tbl_bd_data$20190404"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dd-analyzers-create-json-bd"/>
+<stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+</launchConfiguration>
