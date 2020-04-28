@@ -12,6 +12,8 @@ import com.google.gson.JsonArray;
 
 public class GCSModel {
   private static final Logger LOG = LoggerFactory.getLogger(GCSModel.class);
+  
+  private Storage storage;
 
   public GCSModel() {
     storage = StorageOptions.getDefaultInstance().getService();
@@ -49,6 +51,4 @@ public class GCSModel {
           outputs[i].toString().getBytes());
     }
   }
-
-  private Storage storage;
 }

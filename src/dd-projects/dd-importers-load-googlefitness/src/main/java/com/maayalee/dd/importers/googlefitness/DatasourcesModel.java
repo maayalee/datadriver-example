@@ -5,6 +5,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
 public class DatasourcesModel {
+  private JsonArray array = new JsonArray();
+  
   public DatasourcesModel() {
   }
   
@@ -21,6 +23,4 @@ public class DatasourcesModel {
   public JsonArray getDatasources() {
     return array;
   }
-
-  private JsonArray array = new JsonArray();
 }

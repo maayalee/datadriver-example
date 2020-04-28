@@ -11,33 +11,43 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.datatype.DatatypeConstants;
+
 import org.apache.commons.logging.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.api.client.util.DateTime;
+import com.google.api.services.fitness.model.DataType;
+import com.google.api.services.fitness.model.DataTypeField;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
-// HTTP요청시 DATA STORE DIR의 파일을 다른 프로그램과 공유하면 scope가 허용안된 인증 확인 정보 문제 때문에 Insufficent Permission 에러 응답을 받을 수 있다.
+// HTTP요청시 DATA STORE DIR의 파일을 다른 프로세스와 공유하면 scope가 허용안된 인증 확인 정보 문제 때문에 Insufficent Permission 에러 응답을 받을 수 있다.
 public class GoogleFitnessPresenter {
   private static final Logger LOG = LoggerFactory.getLogger(App.class);
+  
+  private DatasourcesModel datasources;
+  private DatasetsModel datasets;
+  private AggregatedDatasetsModel aggregatedDatasetsModel;
+  private SessionsModel sessions;
 
-  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, SessionsModel sessions) {
+  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, AggregatedDatasetsModel aggregatedDatasets, SessionsModel sessions) {
     this.datasources = datasources;
     this.datasets = datasets;
+    this.aggregatedDatasetsModel = aggregatedDatasets;
     this.sessions = sessions;
   }
 
   public void load(String beginTime, String endTime, String accessToken) throws IOException {
     String url = String.format("https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=%s&endTime=%s",
         URLEncoder.encode(beginTime, "utf-8"), URLEncoder.encode(endTime, "utf-8"));
-    sessions.load(requestHTTP(url, accessToken));
+    sessions.load(request(url, accessToken));
 
     long begin = DateTime.parseRfc3339(beginTime).getValue() * 1000000;
     long end = DateTime.parseRfc3339(endTime).getValue() * 1000000;
 
-    datasources.load(requestHTTP("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
+    datasources.load(request("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
 
     for (JsonElement source : datasources.getDatasources()) {
       String dataStreamId = source.getAsJsonObject().get("dataStreamId").getAsString();
@@ -45,14 +55,15 @@ public class GoogleFitnessPresenter {
 
       url = String.format("https://www.googleapis.com/fitness/v1/users/me/dataSources/%s/datasets/%d-%d",
           URLEncoder.encode(dataStreamId, "utf-8"), begin, end);
-      datasets.load(requestHTTP(url, accessToken));
+      datasets.load(request(url, accessToken));
+      LOG.info(request(url, accessToken));
     }
-    
-    url = "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate";
-    LOG.info(requestAggregateTest(url, accessToken, begin, end));
+   
+    // AGGREGATION 되는 데이터 타입을 지정해서 요청해야 한다(https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType)
+    aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", "com.google.step_count.delta", accessToken, begin, end));
   }
 
-  private String requestHTTP(String stringURL, String accessToken) throws IOException {
+  private String request(String stringURL, String accessToken) throws IOException {
     LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
@@ -77,18 +88,24 @@ public class GoogleFitnessPresenter {
     return sb.toString();
   }
   
-  private String requestAggregateTest(String stringURL, String accessToken, long begin, long end) throws IOException {
+  private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end) throws IOException {
     Map<String,Object> aggregateBy = new LinkedHashMap<>();
-    aggregateBy.put("dataTypeName", "com.google.step_count.delta");
-    aggregateBy.put("dataSourceId", "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps");
+    aggregateBy.put("dataTypeName", dataTypeName);
+    //aggregateBy.put("dataTypeName", "com.google.step_count.delta");
+    //aggregateBy.put("dataSourceId", "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps");
+    //aggregateBy.put("dataSourceId", "derived:com.google.step_count.delta:com.google.android.gms:merge_step_deltas");
+    
     List<Object> list = new LinkedList<Object>();
     list.add(aggregateBy);
     Map<String,Object> bucketByTime = new LinkedHashMap<>();
     bucketByTime.put("durationMillis", 86400000);
+    //bucketByTime.put("durationMillis", 3600000); // 1시간 간격으로 데이터 조회
     
     Map<String,Object> params = new LinkedHashMap<>();
     params.put("aggregateBy", list);
     params.put("bucketByTime", bucketByTime);
+    double d = (begin / 1000000);
+    LOG.info(Long.toString((long)d));
     params.put("startTimeMillis", begin / 1000000);
     params.put("endTimeMillis", end / 1000000);
 
@@ -125,7 +142,5 @@ public class GoogleFitnessPresenter {
     return sb.toString();
   }
 
-  private DatasourcesModel datasources;
-  private DatasetsModel datasets;
-  private SessionsModel sessions;
+
 }

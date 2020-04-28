@@ -128,8 +128,9 @@ public class App {
 
       DatasourcesModel datasources = new DatasourcesModel();
       DatasetsModel datasets = new DatasetsModel();
+      AggregatedDatasetsModel aggregatedDatasets = new AggregatedDatasetsModel();
       SessionsModel sessions = new SessionsModel();
-      GoogleFitnessPresenter presetner = new GoogleFitnessPresenter(datasources, datasets, sessions);
+      GoogleFitnessPresenter presetner = new GoogleFitnessPresenter(datasources, datasets, aggregatedDatasets, sessions);
       presetner.load(beginTime, endTime, credential.getAccessToken());
 
       String[] tokens = (outputDirectory + "/" + outputFilenamePrefix).replaceAll("gs://", "").split("/");
@@ -147,6 +148,7 @@ public class App {
       gcs.write(bucketName, prefix + "datasources-", datasources.getDatasources(), shardSize);
       gcs.write(bucketName, prefix + "sessions-", sessions.getSessions(), shardSize);
       gcs.write(bucketName, prefix + "datasets-", datasets.getDatasets(), shardSize);
+      gcs.write(bucketName, prefix + "aggregated-datasets-", aggregatedDatasets.getDatasets(), shardSize);
 
     } catch (ParseException e) {
       LOG.info(e.getMessage());
