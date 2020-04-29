@@ -21,7 +21,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -58,6 +60,8 @@ public class App {
   private static FileDataStoreFactory dataStoreFactory;
   private static HttpTransport httpTransport;
   private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
+  
+  private static Set<String> permissions = new HashSet<String>();
 
   // 유저 정보에 접근하기 위한 인증 정보 얻기
   private static Credential authorize() throws Exception {
@@ -69,8 +73,12 @@ public class App {
     }
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is));
     // 구글피트니스 API에 대한 모든 접근 권한 그리고 백그라운드에서 실행하기 위한 offlien 권한을 얻기 위한 설정
+    permissions.add(FitnessScopes.FITNESS_ACTIVITY_READ);
+    permissions.add(FitnessScopes.FITNESS_LOCATION_READ);
+    permissions.add(FitnessScopes.FITNESS_REPRODUCTIVE_HEALTH_READ);
+    permissions.add(FitnessScopes.FITNESS_BODY_READ);
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
-        clientSecrets, FitnessScopes.all()).setDataStoreFactory(dataStoreFactory).setAccessType("offline").build();
+        clientSecrets, permissions).setDataStoreFactory(dataStoreFactory).setAccessType("offline").build();
     // authorize
 //    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     return new AuthorizationCodeInstalledApp(flow, new GooglePromptReceiver()).authorize("user");

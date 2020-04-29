@@ -32,10 +32,6 @@ public class GoogleFitnessPresenter {
       "com.google.distance.delta",
       "com.google.calories.expended",
       "com.google.heart_rate.bpm",
-      // 이상한 activity type 정보가 들어온다.
-      //"com.google.activity.segment", 
-      // 어떻게 해석해야할지.. 속도 단위가 뭘까? 
-      //"com.google.speed"
   };
   
   private DatasourcesModel datasources;
@@ -58,7 +54,6 @@ public class GoogleFitnessPresenter {
     long begin = DateTime.parseRfc3339(beginTime).getValue() * 1000000;
     long end = DateTime.parseRfc3339(endTime).getValue() * 1000000;
 
-    /*
     datasources.load(request("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
 
     for (JsonElement source : datasources.getDatasources()) {
@@ -70,13 +65,10 @@ public class GoogleFitnessPresenter {
       datasets.load(request(url, accessToken));
       LOG.info(request(url, accessToken));
     }
-    */
    
-    // AGGREGATION 되는 데이터 타입을 지정해서 요청해야 한다(https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType).
-    // AGGREGATION 되는 데이터 타입을 정해져 있으므로 datasource에서 조회하는 방식이 아닌 수동으로 입력해야 한다.
+    // AGGREGATION 되는 데이터 타입을 지정해서 요청(https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType)
     for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
       aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
-      // 1시간 간격
       //aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 3600000)); 
     }
   }

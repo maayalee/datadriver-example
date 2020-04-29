@@ -1,16 +1,11 @@
 package com.maayalee.dd.importers.googlefitness;
-import org.apache.commons.logging.Log;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class AggregatedDatasetsModel {
-  private static final Logger LOG = LoggerFactory.getLogger(GCSModel.class);
-  
   private JsonArray array = new JsonArray();
 
   public AggregatedDatasetsModel() {
@@ -21,7 +16,6 @@ public class AggregatedDatasetsModel {
   }
   
   public void load(String jsonString) {
-    LOG.info(jsonString);
     JsonParser jsonParser = new JsonParser();
     JsonElement element = jsonParser.parse(jsonString);
     JsonArray buckets = element.getAsJsonObject().get("bucket").getAsJsonArray();
