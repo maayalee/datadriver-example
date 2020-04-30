@@ -45,7 +45,7 @@ public class GCSModel {
     for (int i = 0; i < shardSize; ++i) {
       String fileName = prefix + String.format("%d-of-%d.jsonl", i, shardSize);
       LOG.info("filename: " + fileName);
-      LOG.debug("output: " + outputs[i].toString());
+      LOG.info("output: " + outputs[i].toString());
       storage.create(BlobInfo.newBuilder(bucketName, fileName).setContentType("text/html").build(),
           outputs[i].toString().getBytes());
     }

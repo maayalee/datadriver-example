@@ -47,7 +47,7 @@ public class GoogleFitnessPresenter {
     this.sessions = sessions;
   }
 
-  public void load(String beginTime, String endTime, String accessToken) throws IOException {
+  public void load(String beginTime, String endTime, String accessToken) throws Exception {
     String url = String.format("https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=%s&endTime=%s",
         URLEncoder.encode(beginTime, "utf-8"), URLEncoder.encode(endTime, "utf-8"));
     sessions.load(request(url, accessToken));
@@ -67,7 +67,8 @@ public class GoogleFitnessPresenter {
     }
    
     for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
-      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
+//      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
+      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 3600000));
     }
   }
 
