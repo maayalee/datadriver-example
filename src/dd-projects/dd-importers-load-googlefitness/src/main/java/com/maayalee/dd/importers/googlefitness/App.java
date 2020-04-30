@@ -1,20 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.maayalee.dd.importers.googlefitness;
 
 import java.io.InputStream;
@@ -22,7 +5,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.cli.CommandLine;
@@ -53,7 +35,7 @@ public class App {
   private static final String NAME = "Google fitness importer";
   private static final String VERSION = "1.0";
 
-  // 유저 인증 정보를 저장할 디렉토리 위치
+  // 유저 인증 정보를 저장할 디렉토리 위치 정보 지정
   private static final java.io.File DATA_STORE_DIR = new java.io.File(System.getProperty("user.home"),
       ".store/dd_fitness");
 
@@ -67,20 +49,21 @@ public class App {
   private static Credential authorize() throws Exception {
     // client secrets 정보를 로드한다.
     InputStream is = App.class.getResourceAsStream("/client_secrets.json");
-    // runnable jar 파일로 패키징시에 리소스를 위치가 틀려진다.
+    // runnable jar 파일로 패키징시에 리소스를 위치가 틀려질 수 있다. 파일을 못찾는 경우 resources 폴더를 조회한다.
     if (null == is) {
       is = App.class.getResourceAsStream("/resources/client_secrets.json");
     }
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is));
-    // 구글피트니스 API에 대한 모든 접근 권한 그리고 백그라운드에서 실행하기 위한 offlien 권한을 얻기 위한 설정
+    // 구글피트니스 API에 대한 접근 권한 지정  
     permissions.add(FitnessScopes.FITNESS_ACTIVITY_READ);
     permissions.add(FitnessScopes.FITNESS_LOCATION_READ);
     permissions.add(FitnessScopes.FITNESS_REPRODUCTIVE_HEALTH_READ);
     permissions.add(FitnessScopes.FITNESS_BODY_READ);
+    // 백그라운드에서 실행하기 위한 offline 타입의 인증 처리를 요청한다
     GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(httpTransport, JSON_FACTORY,
         clientSecrets, permissions).setDataStoreFactory(dataStoreFactory).setAccessType("offline").build();
     // authorize
-//    return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
+    //return new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize("user");
     return new AuthorizationCodeInstalledApp(flow, new GooglePromptReceiver()).authorize("user");
   }
 
@@ -115,7 +98,6 @@ public class App {
       String beginTime = cmd.getOptionValue("begin_time");
       String endTime = cmd.getOptionValue("end_time");
       String shardSizeString = cmd.getOptionValue("shard_size").replaceAll("\"", "");
-//      int shardSize = Integer.parseInt(cmd.getOptionValue("shard_size", "2"));
       int shardSize = Integer.parseInt(shardSizeString);
       String outputDirectory = cmd.getOptionValue("output_directory");
       String outputFilenamePrefix = cmd.getOptionValue("output_filenameprefix");
@@ -127,8 +109,8 @@ public class App {
 
       httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
-      // authorization. google fitness API 호출을 위해서는
       Credential credential = authorize();
+      // 인증 정보의 유효 시간이 지나는 경우 자동으로 연장 한다.
       if (credential.getExpiresInSeconds() < 0) {
         LOG.info("Refresh accesstoken");
         credential.refreshToken();
@@ -163,9 +145,6 @@ public class App {
       LOG.info(e.getMessage());
       formatter.printHelp(NAME, options);
       System.exit(1);
-    } catch (NullPointerException e) {
-      LOG.error("NullPointerException occured: " + getStackTrace(e));
-      System.exit(1);
     } catch (Exception e) {
       LOG.error("Excpetion occured: " + getStackTrace(e));
       System.exit(1);
@@ -177,6 +156,5 @@ public class App {
     StringWriter sw = new StringWriter();
     e.printStackTrace(new PrintWriter(sw));
     return sw.toString();
-
   }
 }

@@ -27,6 +27,7 @@ import com.google.gson.JsonElement;
 public class GoogleFitnessPresenter {
   private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
+  // AGGREGATION 요청할 데이터 타입 (https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType)
   private static final String[] aggregatedDataTypeNames = {
       "com.google.step_count.delta",
       "com.google.distance.delta",
@@ -58,18 +59,15 @@ public class GoogleFitnessPresenter {
 
     for (JsonElement source : datasources.getDatasources()) {
       String dataStreamId = source.getAsJsonObject().get("dataStreamId").getAsString();
-      LOG.info(dataStreamId);
+      LOG.debug(dataStreamId);
 
       url = String.format("https://www.googleapis.com/fitness/v1/users/me/dataSources/%s/datasets/%d-%d",
           URLEncoder.encode(dataStreamId, "utf-8"), begin, end);
       datasets.load(request(url, accessToken));
-      LOG.info(request(url, accessToken));
     }
    
-    // AGGREGATION 되는 데이터 타입을 지정해서 요청(https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType)
     for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
       aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
-      //aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 3600000)); 
     }
   }
 
@@ -99,12 +97,10 @@ public class GoogleFitnessPresenter {
   }
   
   private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end, long durationMillis) throws IOException {
+    LOG.info(stringURL);
     Map<String,Object> aggregateBy = new LinkedHashMap<>();
     aggregateBy.put("dataTypeName", dataTypeName);
-    //aggregateBy.put("dataTypeName", "com.google.step_count.delta");
-    //aggregateBy.put("dataSourceId", "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps");
-    //aggregateBy.put("dataSourceId", "derived:com.google.step_count.delta:com.google.android.gms:merge_step_deltas");
-     
+         
     List<Object> list = new LinkedList<Object>();
     list.add(aggregateBy);
     Map<String,Object> bucketByTime = new LinkedHashMap<>();
@@ -118,11 +114,8 @@ public class GoogleFitnessPresenter {
 
     Gson gson = new Gson();
     String jsonPost = gson.toJson(params);
-    LOG.info(jsonPost);
     byte[] postDataBytes = jsonPost.getBytes("UTF-8");
 
-    
-    LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
     uc.setRequestMethod("POST");
