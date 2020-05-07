@@ -1,8 +1,13 @@
 package com.maayalee.dd.importers.googlefitness;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
@@ -15,8 +20,19 @@ public class GCSModel {
   
   private Storage storage;
 
-  public GCSModel() {
-    storage = StorageOptions.getDefaultInstance().getService();
+  public GCSModel() throws IOException {
+    //storage = StorageOptions.getDefaultInstance().getService();
+    storage = StorageOptions.newBuilder().setCredentials(ServiceAccountCredentials.fromStream(getKey())).
+        build().getService();
+  }
+
+  private InputStream getKey() throws IOException {
+    InputStream is = App.class.getResourceAsStream("/service_account.json");
+    if (null == is) {
+      // jar 파일로 실행시 파일 접근
+      is = App.class.getResourceAsStream("/service_account.json");
+    }
+    return is;
   }
 
   public void delete(String bucketName, String prefix) {

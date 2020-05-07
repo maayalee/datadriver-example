@@ -49,8 +49,8 @@ public class App {
   private static Credential authorize() throws Exception {
     // client secrets 정보를 로드한다.
     InputStream is = App.class.getResourceAsStream("/client_secrets.json");
-    // runnable jar 파일로 패키징시에 리소스를 위치가 틀려질 수 있다. 파일을 못찾는 경우 resources 폴더를 조회한다.
     if (null == is) {
+      // jar 파일로 실행시 파일 접근
       is = App.class.getResourceAsStream("/resources/client_secrets.json");
     }
     GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(is));
