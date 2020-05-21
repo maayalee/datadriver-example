@@ -1,0 +1,66 @@
+{
+  "name": "sessions",
+  "fields": [
+    {
+      "name": "id",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "name",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "description",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "startTimeMillis",
+      "type": "INT64",
+      "mode": "",
+      "description":"행동의 시작 시간"
+    },
+    {
+      "name": "endTimeMillis",
+      "type": "INT64",
+      "mode": "",
+      "description":"행동의 완료 시간"
+    },
+    {
+      "name": "modifiedTimeMillis",
+      "type": "INT64",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "application_packageName",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "activityType",
+      "type": "INT64",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "activityType_String",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    },
+    {
+      "name": "timezone",
+      "type": "STRING",
+      "mode": "",
+      "description":""
+    }
+  ],
+  "description":"어떤 행동을 어느 시간동안 했는지에 대한 정보"
+}

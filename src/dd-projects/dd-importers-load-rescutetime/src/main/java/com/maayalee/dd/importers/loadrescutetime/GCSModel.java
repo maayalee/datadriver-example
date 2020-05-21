@@ -1,4 +1,4 @@
-package com.maayalee.dd.importers.rescutetime;
+package com.maayalee.dd.importers.loadrescutetime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

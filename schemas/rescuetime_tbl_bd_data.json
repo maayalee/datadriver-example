@@ -1,0 +1,40 @@
+{
+  "name": "data",
+  "fields": [
+    {
+      "name": "date",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "time_spent_seconds",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "activity",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "category",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "productivity_string",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "productivity",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "timezone",
+      "type": "STRING",
+      "mode": ""
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-package com.maayalee.dd.importers.googlefitness;
+package com.maayalee.dd.importers.loadgooglefitness;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;

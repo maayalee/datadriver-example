@@ -1,0 +1,60 @@
+{
+  "name": "datasets",
+  "fields": [
+    {
+      "name": "minStartTimeNs",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "maxEndTimeNs",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "dataSourceId",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "originDataSourceId",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "startTimeNanos",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "endTimeNanos",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "dataTypeName",
+      "type": "STRING",
+      "mode": ""
+    },
+    {
+      "name": "value0_fpVal",
+      "type": "FLOAT64",
+      "mode": ""
+    },
+    {
+      "name": "value0_intVal",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "modifiedTimeMillis",
+      "type": "INT64",
+      "mode": ""
+    },
+    {
+      "name": "timezone",
+      "type": "STRING",
+      "mode": ""
+    }
+  ]
+}

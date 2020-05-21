@@ -1,4 +1,4 @@
-package com.maayalee.dd.importers.rescutetime;
+package com.maayalee.dd.importers.loadrescutetime;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

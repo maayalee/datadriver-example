@@ -1,4 +1,4 @@
-package com.maayalee.dd.importers.googlefitness;
+package com.maayalee.dd.importers.loadgooglefitness;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

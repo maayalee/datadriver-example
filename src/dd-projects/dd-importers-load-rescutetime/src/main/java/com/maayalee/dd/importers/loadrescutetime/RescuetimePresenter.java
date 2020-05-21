@@ -1,4 +1,4 @@
-package com.maayalee.dd.importers.rescutetime;
+package com.maayalee.dd.importers.loadrescutetime;
 
 import java.io.BufferedReader;
 import java.io.IOException;
