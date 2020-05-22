@@ -30,11 +30,6 @@
       "name": "productivity",
       "type": "INT64",
       "mode": ""
-    },
-    {
-      "name": "timezone",
-      "type": "STRING",
-      "mode": ""
     }
   ]
 }

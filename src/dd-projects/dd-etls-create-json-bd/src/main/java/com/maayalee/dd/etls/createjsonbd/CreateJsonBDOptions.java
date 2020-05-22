@@ -13,11 +13,6 @@ public interface CreateJsonBDOptions extends DataflowPipelineOptions {
   @Description("Input cloud storage file pattern")
   ValueProvider<String> getInputFilePattern();
   void setInputFilePattern(ValueProvider<String> value);
-
-  @Description("Load timezone")
-  @Default.String("UTC")
-  ValueProvider<String> getTimezone();
-  void setTimezone(ValueProvider<String> value);
   
   @Description("Output BigQuery table schema json gs:// path")
   ValueProvider<String> getTableSchemaJSONPath();

@@ -33,9 +33,8 @@ public class CreateJsonBDRunner {
 
   @SuppressWarnings("serial")
   static class CreateTableRow extends DoFn<String, TableRow> {
-    public CreateTableRow(ValueProvider<TableSchema> schema, ValueProvider<String> timezone) {
+    public CreateTableRow(ValueProvider<TableSchema> schema) {
       this.schema = schema;
-      this.timezone = timezone;
     }
 
     @ProcessElement
@@ -57,7 +56,6 @@ public class CreateJsonBDRunner {
             }
           }
         }
-        tableRow.set("timezone", timezone.get());
         c.output(tableRow);
       } catch (Exception e) {
         StringWriter sw = new StringWriter();
@@ -68,7 +66,6 @@ public class CreateJsonBDRunner {
     }
 
     private ValueProvider<TableSchema> schema;
-    private ValueProvider<String> timezone;
   }
 
   public CreateJsonBDRunner() {
@@ -80,7 +77,7 @@ public class CreateJsonBDRunner {
 
       PCollection<String> lines = p.apply("ReadJSONLines", TextIO.read().from(options.getInputFilePattern()));
       CreateTableRow createTableRow = new CreateTableRow(
-          NestedValueProvider.of(options.getTableSchemaJSONPath(), createLoadSchmeaFunction()), options.getTimezone());
+          NestedValueProvider.of(options.getTableSchemaJSONPath(), createLoadSchmeaFunction()));
       PCollection<TableRow> tableRows = lines.apply("CreateBDRows", ParDo.of(createTableRow));
       tableRows.apply("WriteDB",
           BigQueryIO.writeTableRows().to(options.getOutputTable())

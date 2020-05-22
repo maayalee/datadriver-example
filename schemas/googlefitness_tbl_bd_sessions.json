@@ -54,12 +54,6 @@
       "type": "STRING",
       "mode": "",
       "description":""
-    },
-    {
-      "name": "timezone",
-      "type": "STRING",
-      "mode": "",
-      "description":""
     }
   ],
   "description":"어떤 행동을 어느 시간동안 했는지에 대한 정보"

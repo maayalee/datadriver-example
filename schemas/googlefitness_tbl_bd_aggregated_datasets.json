@@ -1,23 +1,18 @@
 {
-  "name": "datasets",
+  "name": "aggregated_datasets",
   "fields": [
     {
-      "name": "minStartTimeNs",
+      "name": "startTimeMillis",
       "type": "INT64",
       "mode": ""
     },
     {
-      "name": "maxEndTimeNs",
+      "name": "endTimeMillis",
       "type": "INT64",
       "mode": ""
     },
     {
       "name": "dataSourceId",
-      "type": "STRING",
-      "mode": ""
-    },
-    {
-      "name": "originDataSourceId",
       "type": "STRING",
       "mode": ""
     },
@@ -44,16 +39,6 @@
     {
       "name": "value0_intVal",
       "type": "INT64",
-      "mode": ""
-    },
-    {
-      "name": "modifiedTimeMillis",
-      "type": "INT64",
-      "mode": ""
-    },
-    {
-      "name": "timezone",
-      "type": "STRING",
       "mode": ""
     }
   ]
