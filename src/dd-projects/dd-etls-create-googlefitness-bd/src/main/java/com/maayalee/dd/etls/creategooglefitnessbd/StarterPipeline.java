@@ -1,4 +1,4 @@
-package com.maayalee.dd.etls.createjsonbd;
+package com.maayalee.dd.etls.creategooglefitnessbd;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

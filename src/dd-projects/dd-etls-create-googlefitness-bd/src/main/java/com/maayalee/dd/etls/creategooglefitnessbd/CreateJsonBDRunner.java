@@ -1,10 +1,11 @@
-package com.maayalee.dd.etls.createjsonbd;
+package com.maayalee.dd.etls.creategooglefitnessbd;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
 import org.apache.beam.sdk.io.gcp.bigquery.BigQueryIO;
@@ -26,11 +27,11 @@ import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TimePartitioning;
-import com.maayalee.dd.etls.createjsonbd.TableSchemaDTO.TableField;
+import com.maayalee.dd.etls.creategooglefitnessbd.TableSchemaDTO.TableField;
 
 public class CreateJsonBDRunner {
   private static final Logger LOG = LoggerFactory.getLogger(CreateJsonBDRunner.class);
-
+  
   @SuppressWarnings("serial")
   static class CreateTableRow extends DoFn<String, TableRow> {
     public CreateTableRow(ValueProvider<TableSchema> schema) {
@@ -74,14 +75,36 @@ public class CreateJsonBDRunner {
   public static void start(CreateJsonBDOptions options) {
     try {
       Pipeline p = Pipeline.create(options);
-
-      PCollection<String> lines = p.apply("ReadJSONLines", TextIO.read().from(options.getInputFilePattern()));
+      
+      PCollection<String> lines = p.apply("ReadJSONLines - AggregatedDatasets", TextIO.read().from(options.getInputAggregatedDatasetsFilePattern()));
       CreateTableRow createTableRow = new CreateTableRow(
-          NestedValueProvider.of(options.getTableSchemaJSONPath(), createLoadSchmeaFunction()));
-      PCollection<TableRow> tableRows = lines.apply("CreateBDRows", ParDo.of(createTableRow));
-      tableRows.apply("WriteDB",
-          BigQueryIO.writeTableRows().to(options.getOutputTable())
-              .withSchema(NestedValueProvider.of(options.getTableSchemaJSONPath(), createLoadSchmeaFunction()))
+          NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadSchmeaFunction()));
+      PCollection<TableRow> tableRows = lines.apply("CreateBDRows - AggregatedDatasets", ParDo.of(createTableRow));
+      tableRows.apply("WriteDB - AggregatedDatasets",
+          BigQueryIO.writeTableRows().to(options.getOutputAggregatedDatasetsTable())
+              .withSchema(NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadSchmeaFunction()))
+              .withTimePartitioning(new TimePartitioning().setType("DAY"))
+              .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
+              .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
+      
+      lines = p.apply("ReadJSONLines - Datasets", TextIO.read().from(options.getInputDatasetsFilePattern()));
+      createTableRow = new CreateTableRow(
+          NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()));
+      tableRows = lines.apply("CreateBDRows - Datasets", ParDo.of(createTableRow));
+      tableRows.apply("WriteDB - Datasets",
+          BigQueryIO.writeTableRows().to(options.getOutputDatasetsTable())
+              .withSchema(NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()))
+              .withTimePartitioning(new TimePartitioning().setType("DAY"))
+              .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
+              .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
+      
+      lines = p.apply("ReadJSONLines - Sessions", TextIO.read().from(options.getInputSessionsFilePattern()));
+      createTableRow = new CreateTableRow(
+          NestedValueProvider.of(options.getTableSchemaSessionsJSONPath(), createLoadSchmeaFunction()));
+      tableRows = lines.apply("CreateBDRows - Sessions", ParDo.of(createTableRow));
+      tableRows.apply("WriteDB - Sessions",
+          BigQueryIO.writeTableRows().to(options.getOutputSessionsTable())
+              .withSchema(NestedValueProvider.of(options.getTableSchemaSessionsJSONPath(), createLoadSchmeaFunction()))
               .withTimePartitioning(new TimePartitioning().setType("DAY"))
               .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
               .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));

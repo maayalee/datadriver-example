@@ -1,4 +1,4 @@
-package com.maayalee.dd.etls.createjsonbd;
+package com.maayalee.dd.etls.createrescuetimebd;
 
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;

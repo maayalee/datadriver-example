@@ -1,4 +1,4 @@
-package com.maayalee.dd.etls.createjsonbd;
+package com.maayalee.dd.etls.createrescuetimebd;
 
 import java.util.LinkedList;
 import java.util.List;
