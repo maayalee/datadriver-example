@@ -23,11 +23,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.github.wnameless.json.flattener.JsonFlattener;
 import com.github.wnameless.json.flattener.StringEscapePolicy;
+import com.google.api.services.bigquery.model.Cluster;
+import com.google.api.services.bigquery.model.Clustering;
 import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableRow;
 import com.google.api.services.bigquery.model.TableSchema;
 import com.google.api.services.bigquery.model.TimePartitioning;
+import com.google.common.collect.ImmutableList;
 import com.maayalee.dd.etls.creategooglefitnessbd.TableSchemaDTO.TableField;
+import com.google.api.client.util.DateTime;
 
 public class CreateJsonBDRunner {
   private static final Logger LOG = LoggerFactory.getLogger(CreateJsonBDRunner.class);
@@ -68,33 +72,76 @@ public class CreateJsonBDRunner {
 
     private ValueProvider<TableSchema> schema;
   }
+  
+  @SuppressWarnings("serial")
+  static class FilteringRows extends DoFn<TableRow, TableRow> {
+    public FilteringRows(ValueProvider<String> beginTime, ValueProvider<String> endTime) {
+      this.beginTime = beginTime;
+      this.endTime = endTime;
+    }
+
+    @ProcessElement
+    public void processElement(ProcessContext c) {
+      TableRow tableRow = c.element();
+      try {
+        TableRow newTableRow = tableRow.clone();
+        Long beginRange = DateTime.parseRfc3339(beginTime.get()).getValue() * 1000000;
+        Long endRange = DateTime.parseRfc3339(endTime.get()).getValue() * 1000000;
+        
+        Long begin = Long.parseLong((String)tableRow.get("startTimeNanos"));
+        Long end = Long.parseLong((String)tableRow.get("endTimeNanos"));
+        
+        if (begin < beginRange) {
+          newTableRow.set("startTimeNanos", beginRange);
+        }
+        if (end > endRange) {
+          newTableRow.set("endTimeNanos", endRange);
+        }
+        c.output(newTableRow);
+      } catch (Exception e) {
+        StringWriter sw = new StringWriter();
+        PrintWriter pw = new PrintWriter(sw);
+        e.printStackTrace(pw);
+        LOG.error(String.format("Occured exception: %s", sw.toString()));
+      }
+    }
+
+    private ValueProvider<String> beginTime;
+    private ValueProvider<String> endTime;
+  }
 
   public CreateJsonBDRunner() {
   }
 
   public static void start(CreateJsonBDOptions options) {
     try {
+ 
       Pipeline p = Pipeline.create(options);
-      
       PCollection<String> lines = p.apply("ReadJSONLines - AggregatedDatasets", TextIO.read().from(options.getInputAggregatedDatasetsFilePattern()));
       CreateTableRow createTableRow = new CreateTableRow(
           NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadSchmeaFunction()));
+      FilteringRows filteringRows = new FilteringRows(options.getBeginTime(), options.getEndTime());
+
       PCollection<TableRow> tableRows = lines.apply("CreateBDRows - AggregatedDatasets", ParDo.of(createTableRow));
       tableRows.apply("WriteDB - AggregatedDatasets",
           BigQueryIO.writeTableRows().to(options.getOutputAggregatedDatasetsTable())
               .withSchema(NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadSchmeaFunction()))
               .withTimePartitioning(new TimePartitioning().setType("DAY"))
+              .withClustering(NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadClusteringFieldsFunction()).get())
               .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
               .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
       
       lines = p.apply("ReadJSONLines - Datasets", TextIO.read().from(options.getInputDatasetsFilePattern()));
       createTableRow = new CreateTableRow(
           NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()));
+      
       tableRows = lines.apply("CreateBDRows - Datasets", ParDo.of(createTableRow));
+      tableRows = tableRows.apply("FilteringRows - Datasets", ParDo.of(filteringRows));
       tableRows.apply("WriteDB - Datasets",
           BigQueryIO.writeTableRows().to(options.getOutputDatasetsTable())
               .withSchema(NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()))
               .withTimePartitioning(new TimePartitioning().setType("DAY"))
+              .withClustering(NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadClusteringFieldsFunction2()).get())
               .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
               .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
       
@@ -150,8 +197,34 @@ public class CreateJsonBDRunner {
             schema.setMode(field.mode);
           }
           fields.add(schema);
-        }
+        } 
         return new TableSchema().setFields(fields);
+      }
+    };
+  }
+  
+  @SuppressWarnings("serial")
+  private static SerializableFunction<String, Clustering> createLoadClusteringFieldsFunction() {
+    return new SerializableFunction<String, Clustering>() {
+      @Override
+      public Clustering apply(String jsonPath) {
+        // @todo JSON 스키자 정의에서 읽어서 생성하기
+        Clustering clustering = new Clustering();
+        clustering.setFields(ImmutableList.of("startTimeMillis"));
+        return clustering;
+      }
+    };
+  }
+  
+  @SuppressWarnings("serial")
+  private static SerializableFunction<String, Clustering> createLoadClusteringFieldsFunction2() {
+    return new SerializableFunction<String, Clustering>() {
+      @Override
+      public Clustering apply(String jsonPath) {
+        // @todo JSON 스키자 정의에서 읽어서 생성하기
+        Clustering clustering = new Clustering();
+        clustering.setFields(ImmutableList.of("startTimeNanos", "endTimeNanos"));
+        return clustering;
       }
     };
   }
