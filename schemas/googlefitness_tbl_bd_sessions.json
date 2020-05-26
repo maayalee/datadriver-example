@@ -5,54 +5,63 @@
       "name": "id",
       "type": "STRING",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "name",
       "type": "STRING",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "description",
       "type": "STRING",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "startTimeMillis",
       "type": "INT64",
       "mode": "",
+      "is_clustering": true,
       "description":"행동의 시작 시간"
     },
     {
       "name": "endTimeMillis",
       "type": "INT64",
       "mode": "",
+      "is_clustering": true,
       "description":"행동의 완료 시간"
     },
     {
       "name": "modifiedTimeMillis",
       "type": "INT64",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "application_packageName",
       "type": "STRING",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "activityType",
       "type": "INT64",
       "mode": "",
+      "is_clustering": false,
       "description":""
     },
     {
       "name": "activityType_String",
       "type": "STRING",
       "mode": "",
+      "is_clustering": false,
       "description":""
     }
   ],

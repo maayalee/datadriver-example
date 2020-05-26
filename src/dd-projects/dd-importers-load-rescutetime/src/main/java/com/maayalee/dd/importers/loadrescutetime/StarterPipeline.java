@@ -62,13 +62,25 @@ public class StarterPipeline {
     apiKeyOption.setRequired(true);
     options.addOption(apiKeyOption);
 
-    Option beginDateOption = new Option("", "begin_date", true, "");
-    beginDateOption.setRequired(true);
-    options.addOption(beginDateOption);
+    Option inputBeginDateOption = new Option("", "input_begin_date", true, "");
+    inputBeginDateOption.setRequired(true);
+    options.addOption(inputBeginDateOption);
 
-    Option endDateOption = new Option("", "end_date", true, "");
-    endDateOption.setRequired(true);
-    options.addOption(endDateOption);
+    Option inputEndDateOption = new Option("", "input_end_date", true, "");
+    inputEndDateOption.setRequired(true);
+    options.addOption(inputEndDateOption);
+    
+    Option inputTimezoneOption = new Option("", "input_timezone", true, "");
+    inputTimezoneOption.setRequired(true);
+    options.addOption(inputTimezoneOption);
+    
+    Option outputDateOption = new Option("", "output_date", true, "");
+    outputDateOption.setRequired(true);
+    options.addOption(outputDateOption);
+    
+    Option outputTimezoneOption = new Option("", "output_timezone", true, "");
+    outputTimezoneOption.setRequired(true);
+    options.addOption(outputTimezoneOption);
 
     Option outputDirectoryOption = new Option("", "output_directory", true, "");
     outputDirectoryOption.setRequired(true);
@@ -88,18 +100,21 @@ public class StarterPipeline {
       CommandLine cmd = parser.parse(options, args);
 
       String apiKey = cmd.getOptionValue("api_key");
-      String beginDate = cmd.getOptionValue("begin_date");
-      String endDate = cmd.getOptionValue("end_date");
+      String inputBeginDate = cmd.getOptionValue("input_begin_date");
+      String inputEndDate = cmd.getOptionValue("input_end_date");
+      String inputTimezone = cmd.getOptionValue("input_timezone");
+      String outputDate = cmd.getOptionValue("output_date");
+      String outputTimezone = cmd.getOptionValue("output_timezone");
       int shardSize = Integer.parseInt(cmd.getOptionValue("shard_size"));
       String outputDirectory = cmd.getOptionValue("output_directory");
       String outputFilenamePrefix = cmd.getOptionValue("output_filenameprefix");
 
       System.out.println(NAME + " (Ver." + VERSION + ")");
-      System.out.println(String.format("key:%s, begin_date:%s, end_date:%s", apiKey, beginDate, endDate));
+      System.out.println(String.format("key:%s, input_begin_date:%s, input_end_date:%s", apiKey, inputBeginDate, inputEndDate));
 
-      AnalyticDataModel analyticDataModel = new AnalyticDataModel();
+      AnalyticDataModel analyticDataModel = new AnalyticDataModel(inputTimezone, outputDate, outputTimezone);
       RescuetimePresenter rescuetimePresneter = new RescuetimePresenter(analyticDataModel);
-      rescuetimePresneter.load(apiKey, beginDate, endDate);
+      rescuetimePresneter.load(apiKey, inputBeginDate, inputEndDate);
 
       String[] tokens = (outputDirectory + "/" + outputFilenamePrefix).replaceAll("gs://", "").split("/");
       String bucketName = tokens[0];

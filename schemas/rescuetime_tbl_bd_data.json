@@ -4,32 +4,46 @@
     {
       "name": "date",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false,
+      "description":""
+    },
+    {
+      "name": "date_timestamp_millis",
+      "type": "INT64",
+      "mode": "",
+      "is_clustering": true,
+      "description":""
     },
     {
       "name": "time_spent_seconds",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "activity",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "category",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "productivity_string",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "productivity",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     }
   ]
 }

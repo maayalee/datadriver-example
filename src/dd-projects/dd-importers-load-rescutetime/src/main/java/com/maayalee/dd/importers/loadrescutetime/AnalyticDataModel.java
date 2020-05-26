@@ -1,41 +1,72 @@
 package com.maayalee.dd.importers.loadrescutetime;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class AnalyticDataModel {
-  public static String[] PRODUCTIVITY_STRINGS = new String[] { "very distracting", "distracting", "neutral",
-      "productive", "very productive" };
+  private static final Logger LOG = LoggerFactory.getLogger(StarterPipeline.class);
 
-  public AnalyticDataModel() {
+  public AnalyticDataModel(String loadTimezone, String outputDate, String outputTimezone) {
+    this.loadTimezone = loadTimezone;
+    this.outputDate = outputDate;
+    this.outputTimezone = outputTimezone;
   }
 
   public void clear() {
     array = new JsonArray();
   }
 
-  public void load(String jsonString) {
+  public void load(String jsonString) throws ParseException {
     JsonParser jsonParser = new JsonParser();
     JsonElement element = jsonParser.parse(jsonString);
     JsonArray row_headers = element.getAsJsonObject().get("row_headers").getAsJsonArray();
 
     JsonArray rows = element.getAsJsonObject().get("rows").getAsJsonArray();
 
+    // 로그의 시간을 어떤 타임존 시간대로 처리할지 설정
+    SimpleDateFormat loadDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+    loadDateFormat.setTimeZone(TimeZone.getTimeZone(loadTimezone));
+    
+    SimpleDateFormat outputDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    outputDateFormat.setTimeZone(TimeZone.getTimeZone(outputTimezone));
+    Date targetDate = outputDateFormat.parse(outputDate);
+    long targetDateStartTimestamp = targetDate.getTime();
+    long targetDateEndTimestamp = targetDate.getTime() + 86400000;
+    LOG.info("target timestamp range:" + targetDateStartTimestamp + "-" + targetDateEndTimestamp);
+
+    
     for (int i = 0; i < rows.size(); ++i) {
       JsonArray elements = rows.get(i).getAsJsonArray();
       JsonObject data = new JsonObject();
-      for (int j = 0; j < elements.size(); ++j) {
+      boolean matchedDate = false;
+      for (int j = 0; j < elements.size(); ++j) {  
         String name = row_headers.get(j).getAsString().toLowerCase().replace(" ", "_");
         String value = elements.get(j).getAsString();
-        if (name.equals("productivity")) {
-          int productivity = Integer.parseInt(value);
-          data.addProperty("productivity_string", PRODUCTIVITY_STRINGS[productivity + 2]);
+        if (name.equals("date")) {
+          Date logDate = loadDateFormat.parse(value);
+          long timestamp = logDate.getTime();
+          // 내가 원하는 시간대 기준 날짜에 속하는 경우에만 저장하도록 한다
+          if (timestamp >= targetDateStartTimestamp && timestamp < targetDateEndTimestamp) {
+            matchedDate = true;
+            data.addProperty("date_timestamp_millis", String.valueOf(timestamp));
+          }
         }
         data.addProperty(name, value);
       }
-      array.add(data);
+      
+      if (matchedDate) {
+        array.add(data);
+      }
     }
   }
 
@@ -44,4 +75,7 @@ public class AnalyticDataModel {
   }
 
   private JsonArray array = new JsonArray();
+  private String loadTimezone;
+  private String outputDate;
+  private String outputTimezone;
 }

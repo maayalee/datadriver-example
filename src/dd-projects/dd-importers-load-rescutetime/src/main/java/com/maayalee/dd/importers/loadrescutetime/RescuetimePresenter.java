@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,7 @@ public class RescuetimePresenter {
     this.analyticData = analyticData;
   }
 
-  public void load(String apiKey, String beginDate, String endDate) throws IOException {
+  public void load(String apiKey, String beginDate, String endDate) throws IOException, ParseException {
     String url = String.format(
         "https://www.rescuetime.com/anapi/data?key=%s&restrict_begin=%s&restrict_end=%s&perspective=interval&resolution_time=hour",
         apiKey, beginDate, endDate);

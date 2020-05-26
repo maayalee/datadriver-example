@@ -2,54 +2,52 @@
   "name": "datasets",
   "fields": [
     {
-      "name": "minStartTimeNs",
-      "type": "INT64",
-      "mode": ""
-    },
-    {
-      "name": "maxEndTimeNs",
-      "type": "INT64",
-      "mode": ""
-    },
-    {
       "name": "dataSourceId",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "originDataSourceId",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "startTimeNanos",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": true
     },
     {
       "name": "endTimeNanos",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": true
     },
     {
       "name": "dataTypeName",
       "type": "STRING",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "value0_fpVal",
       "type": "FLOAT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "value0_intVal",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     },
     {
       "name": "modifiedTimeMillis",
       "type": "INT64",
-      "mode": ""
+      "mode": "",
+      "is_clustering": false
     }
   ]
 }

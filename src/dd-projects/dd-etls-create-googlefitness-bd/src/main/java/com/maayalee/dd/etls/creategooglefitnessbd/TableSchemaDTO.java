@@ -16,6 +16,7 @@ public class TableSchemaDTO implements java.io.Serializable {
     public String name;
     public String type;
     public String mode;
+    public Boolean isClustering;
   };
   
   public String name;
