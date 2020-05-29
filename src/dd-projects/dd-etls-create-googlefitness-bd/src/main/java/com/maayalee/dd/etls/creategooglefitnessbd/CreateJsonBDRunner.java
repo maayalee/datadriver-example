@@ -2,9 +2,12 @@ package com.maayalee.dd.etls.creategooglefitnessbd;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
@@ -73,6 +76,8 @@ public class CreateJsonBDRunner {
   
   @SuppressWarnings("serial")
   static class AdjustTimeRange extends DoFn<TableRow, TableRow> {
+    private static final Long THIRTY_MINUTES = 1800000L;
+    
     public AdjustTimeRange(ValueProvider<String> beginTime, ValueProvider<String> endTime) {
       this.beginTime = beginTime;
       this.endTime = endTime;
@@ -83,19 +88,41 @@ public class CreateJsonBDRunner {
       TableRow tableRow = c.element();
       try {
         TableRow newTableRow = tableRow.clone();
-        Long beginRange = DateTime.parseRfc3339(beginTime.get()).getValue() * 1000000;
-        Long endRange = DateTime.parseRfc3339(endTime.get()).getValue() * 1000000;
-        
-        Long begin = Long.parseLong((String)tableRow.get("startTimeNanos"));
-        Long end = Long.parseLong((String)tableRow.get("endTimeNanos"));
-        
-        if (begin < beginRange) {
-          newTableRow.set("startTimeNanos", beginRange);
+        Long beginTimeOfDate = DateTime.parseRfc3339(beginTime.get()).getValue();
+        Long endTimeOfDate = DateTime.parseRfc3339(endTime.get()).getValue();
+        Long startTime = Long.parseLong((String)tableRow.get("startTimeMillis"));
+        Long endTime = Long.parseLong((String)tableRow.get("endTimeMillis"));
+
+        // 이틀에 걸쳐 중복되는 데이터는 범위에 해당하는 날짜마다 데이터를 돌려준다. 따라서 로드하는 날짜의 범위안에 있는 시간으로 변경해준다. 
+        if (startTime < beginTimeOfDate) {
+          newTableRow.set("startTimeMillis", beginTimeOfDate);
+          startTime = beginTimeOfDate;
         }
-        if (end > endRange) {
-          newTableRow.set("endTimeNanos", endRange);
+        if (endTime > endTimeOfDate) {
+          newTableRow.set("endTimeMillis", endTimeOfDate);
+          endTime = endTimeOfDate;
         }
-        c.output(newTableRow);
+        // 다양한 타임존 기준으로 측정을 위해 데이터의 범위를 30분 단위로 분리해서 저장한다. 
+        if ((endTime - startTime) > THIRTY_MINUTES) {
+          Long currentStartTime = startTime;
+          Long currentEndTime = startTime + THIRTY_MINUTES;
+          while (true) {
+            TableRow divideTableRow = newTableRow.clone();
+            divideTableRow.set("startTimeMillis", currentStartTime);
+            divideTableRow.set("endTimeMillis", currentEndTime > endTime ? endTime : currentEndTime);
+            c.output(divideTableRow);
+
+            if (currentEndTime > endTime) {
+              break;
+            }
+            currentStartTime += THIRTY_MINUTES;
+            currentEndTime += THIRTY_MINUTES;
+          }
+        }
+        else {
+          c.output(newTableRow);
+        }
+        
       } catch (Exception e) {
         StringWriter sw = new StringWriter();
         PrintWriter pw = new PrintWriter(sw);
@@ -129,24 +156,11 @@ public class CreateJsonBDRunner {
               .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
               .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
       
-      lines = p.apply("ReadJSONLines - Datasets", TextIO.read().from(options.getInputDatasetsFilePattern()));
-      createTableRow = new CreateTableRow(
-          NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()));
-      
-      tableRows = lines.apply("CreateBDRows - Datasets", ParDo.of(createTableRow));
-      tableRows = tableRows.apply("FilteringRows - Datasets", ParDo.of(adjustTimeRange));
-      tableRows.apply("WriteDB - Datasets",
-          BigQueryIO.writeTableRows().to(options.getOutputDatasetsTable())
-              .withSchema(NestedValueProvider.of(options.getTableSchemaDatasetsJSONPath(), createLoadSchmeaFunction()))
-              .withTimePartitioning(new TimePartitioning().setType("DAY"))
-              .withClustering(NestedValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath(), createLoadClustering()).get())
-              .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
-              .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE));
-      
       lines = p.apply("ReadJSONLines - Sessions", TextIO.read().from(options.getInputSessionsFilePattern()));
       createTableRow = new CreateTableRow(
           NestedValueProvider.of(options.getTableSchemaSessionsJSONPath(), createLoadSchmeaFunction()));
       tableRows = lines.apply("CreateBDRows - Sessions", ParDo.of(createTableRow));
+      tableRows = tableRows.apply("FilteringRows - Sessions", ParDo.of(adjustTimeRange));
       tableRows.apply("WriteDB - Sessions",
           BigQueryIO.writeTableRows().to(options.getOutputSessionsTable())
               .withSchema(NestedValueProvider.of(options.getTableSchemaSessionsJSONPath(), createLoadSchmeaFunction()))

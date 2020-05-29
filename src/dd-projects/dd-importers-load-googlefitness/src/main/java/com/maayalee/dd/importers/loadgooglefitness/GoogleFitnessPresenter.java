@@ -62,8 +62,8 @@ public class GoogleFitnessPresenter {
     }
    
     for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
-//      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
-      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 3600000));
+      // 타임존에 따른 조회를 위해 30분 단위로 가져온다.
+      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 1800000));
     }
   }
 
@@ -137,6 +137,4 @@ public class GoogleFitnessPresenter {
     }
     return sb.toString();
   }
-
-
 }

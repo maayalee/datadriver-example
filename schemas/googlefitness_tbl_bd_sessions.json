@@ -33,7 +33,7 @@
       "name": "endTimeMillis",
       "type": "INT64",
       "mode": "",
-      "is_clustering": true,
+      "is_clustering": false,
       "description":"행동의 완료 시간"
     },
     {

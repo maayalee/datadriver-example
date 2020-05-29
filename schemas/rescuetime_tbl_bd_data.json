@@ -2,13 +2,6 @@
   "name": "data",
   "fields": [
     {
-      "name": "date",
-      "type": "STRING",
-      "mode": "",
-      "is_clustering": false,
-      "description":""
-    },
-    {
       "name": "date_timestamp_millis",
       "type": "INT64",
       "mode": "",

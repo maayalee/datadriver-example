@@ -19,20 +19,12 @@ public interface CreateJsonBDOptions extends DataflowPipelineOptions {
   void setEndTime(ValueProvider<String> value);
 
   @Description("Input cloud storage file pattern")
-  ValueProvider<String> getInputDatasetsFilePattern();
-  void setInputDatasetsFilePattern(ValueProvider<String> value);
-  
-  @Description("Input cloud storage file pattern")
   ValueProvider<String> getInputAggregatedDatasetsFilePattern();
   void setInputAggregatedDatasetsFilePattern(ValueProvider<String> value);
 
  @Description("Input cloud storage file pattern")
   ValueProvider<String> getInputSessionsFilePattern();
   void setInputSessionsFilePattern(ValueProvider<String> value);
-  
-  @Description("Output BigQuery table schema json gs:// path")
-  ValueProvider<String> getTableSchemaDatasetsJSONPath();
-  void setTableSchemaDatasetsJSONPath(ValueProvider<String> value);
   
   @Description("Output BigQuery table schema json gs:// path")
   ValueProvider<String> getTableSchemaAggregatedDatasetsJSONPath();
@@ -42,10 +34,6 @@ public interface CreateJsonBDOptions extends DataflowPipelineOptions {
   ValueProvider<String> getTableSchemaSessionsJSONPath();
   void setTableSchemaSessionsJSONPath(ValueProvider<String> value);
 
-  @Description("Output BigQuery table spec")
-  ValueProvider<String> getOutputDatasetsTable();
-  void setOutputDatasetsTable(ValueProvider<String> value);
-  
   @Description("Output BigQuery table spec")
   ValueProvider<String> getOutputAggregatedDatasetsTable();
   void setOutputAggregatedDatasetsTable(ValueProvider<String> value);
