@@ -2,6 +2,13 @@
   "name": "sessions",
   "fields": [
     {
+      "name": "user_id",
+      "type": "STRING",
+      "mode": "",
+      "is_clustering": true,
+      "description":""
+    },
+    {
       "name": "id",
       "type": "STRING",
       "mode": "",
@@ -26,7 +33,7 @@
       "name": "startTimeMillis",
       "type": "INT64",
       "mode": "",
-      "is_clustering": true,
+      "is_clustering": false,
       "description":"행동의 시작 시간"
     },
     {

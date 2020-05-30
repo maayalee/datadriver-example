@@ -7,8 +7,10 @@ import com.google.gson.JsonParser;
 
 public class AggregatedDatasetsModel {
   private JsonArray array = new JsonArray();
+  private String userId;
 
-  public AggregatedDatasetsModel() {
+  public AggregatedDatasetsModel(String userId) {
+    this.userId = userId;
   }
   
   public void clear() {
@@ -34,6 +36,7 @@ public class AggregatedDatasetsModel {
         for (int k = 0; k < points.size(); ++k) {
           JsonObject point = points.get(k).getAsJsonObject();
           JsonObject data = new JsonObject();
+          data.addProperty("user_id", userId);
           data.addProperty("startTimeMillis", startTimeMillis);
           data.addProperty("endTimeMillis", endTimeMillis);
           data.addProperty("dataSourceId", dataSourceId);

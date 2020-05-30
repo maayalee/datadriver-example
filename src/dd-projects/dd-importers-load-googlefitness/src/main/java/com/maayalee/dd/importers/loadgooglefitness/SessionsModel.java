@@ -11,9 +11,14 @@ import com.google.gson.JsonParser;
 public class SessionsModel {
   private static Map<String, String> ACTIVITY_TYPE_STRINGS = new HashMap<String, String>();
   
-  public SessionsModel() {
+  private JsonArray array = new JsonArray();
+  private String userId;
+  
+  public SessionsModel(String userId) {
     ACTIVITY_TYPE_STRINGS.put("7", "Walking*");
     ACTIVITY_TYPE_STRINGS.put("72", "Sleeping");
+    
+    this.userId = userId;
   }
   
   public void clear() {
@@ -26,13 +31,8 @@ public class SessionsModel {
 
     JsonArray sessions = element.getAsJsonObject().get("session").getAsJsonArray();
     for (int i = 0; i < sessions.size(); ++i) {
-      JsonObject session = sessions.get(i).getAsJsonObject();
-
-      JsonObject data = new JsonObject();
-      for (String key : session.keySet()) {
-        JsonElement field = session.get(key);
-        data.add(key, field);
-      }
+      JsonObject data = sessions.get(i).getAsJsonObject().deepCopy();
+      data.addProperty("user_id", userId);
       data.addProperty("activityType_String", ACTIVITY_TYPE_STRINGS.get(data.get("activityType").getAsString()));
       array.add(data);
     }
@@ -42,5 +42,4 @@ public class SessionsModel {
     return array;
   }
   
-  private JsonArray array = new JsonArray();
 }

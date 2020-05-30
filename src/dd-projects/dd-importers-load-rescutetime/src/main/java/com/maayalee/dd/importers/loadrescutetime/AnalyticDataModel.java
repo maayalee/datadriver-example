@@ -15,8 +15,15 @@ import com.google.gson.JsonParser;
 
 public class AnalyticDataModel {
   private static final Logger LOG = LoggerFactory.getLogger(StarterPipeline.class);
+  
+  private JsonArray array = new JsonArray();
+  private String userId;
+  private String loadTimezone;
+  private String outputDate;
+  private String outputTimezone;
 
-  public AnalyticDataModel(String loadTimezone, String outputDate, String outputTimezone) {
+  public AnalyticDataModel(String userId, String loadTimezone, String outputDate, String outputTimezone) {
+    this.userId = userId;
     this.loadTimezone = loadTimezone;
     this.outputDate = outputDate;
     this.outputTimezone = outputTimezone;
@@ -48,6 +55,8 @@ public class AnalyticDataModel {
     for (int i = 0; i < rows.size(); ++i) {
       JsonArray elements = rows.get(i).getAsJsonArray();
       JsonObject data = new JsonObject();
+      data.addProperty("user_id", userId);
+      
       boolean matchedDate = false;
       for (int j = 0; j < elements.size(); ++j) {  
         String name = row_headers.get(j).getAsString().toLowerCase().replace(" ", "_");
@@ -55,7 +64,7 @@ public class AnalyticDataModel {
         if (name.equals("date")) {
           Date logDate = loadDateFormat.parse(value);
           long timestamp = logDate.getTime();
-          // 내가 원하는 시간대 기준 날짜에 속하는 경우에만 저장하도록 한다
+          // 레스큐타임은 유저가 설정한 타임존 기준으로 데이터를 내보내주므로 내가 원하는 UTC 시간대 기준 날짜에 속하는 경우에만 저장하도록 한다
           if (timestamp >= targetDateStartTimestamp && timestamp < targetDateEndTimestamp) {
             matchedDate = true;
             data.addProperty("date_timestamp_millis", String.valueOf(timestamp));
@@ -73,9 +82,4 @@ public class AnalyticDataModel {
   public JsonArray getAnalyticDatas() {
     return array;
   }
-
-  private JsonArray array = new JsonArray();
-  private String loadTimezone;
-  private String outputDate;
-  private String outputTimezone;
 }

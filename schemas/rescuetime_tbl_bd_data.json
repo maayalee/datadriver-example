@@ -2,10 +2,17 @@
   "name": "data",
   "fields": [
     {
+      "name": "user_id",
+      "type": "STRING",
+      "mode": "",
+      "is_clustering": true,
+      "description":""
+    },
+    {
       "name": "date_timestamp_millis",
       "type": "INT64",
       "mode": "",
-      "is_clustering": true,
+      "is_clustering": false,
       "description":""
     },
     {

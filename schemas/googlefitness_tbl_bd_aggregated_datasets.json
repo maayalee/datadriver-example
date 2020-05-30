@@ -2,6 +2,13 @@
   "name": "aggregated_datasets",
   "fields": [
     {
+      "name": "user_id",
+      "type": "STRING",
+      "mode": "",
+      "is_clustering": true,
+      "description":""
+    },
+    {
       "name": "dataSourceId",
       "type": "STRING",
       "mode": "",
@@ -11,7 +18,7 @@
       "name": "startTimeNanos",
       "type": "INT64",
       "mode": "",
-      "is_clustering": true
+      "is_clustering": false
     },
     {
       "name": "endTimeNanos",

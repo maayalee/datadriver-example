@@ -57,6 +57,10 @@ public class StarterPipeline {
 
   public static void main(String[] args) {
     Options options = new Options();
+    
+    Option userIdOption = new Option("", "user_id", true, "");
+    userIdOption.setRequired(true);
+    options.addOption(userIdOption);
 
     Option apiKeyOption = new Option("", "api_key", true, "");
     apiKeyOption.setRequired(true);
@@ -99,6 +103,7 @@ public class StarterPipeline {
     try {
       CommandLine cmd = parser.parse(options, args);
 
+      String userId = cmd.getOptionValue("user_id");
       String apiKey = cmd.getOptionValue("api_key");
       String inputBeginDate = cmd.getOptionValue("input_begin_date");
       String inputEndDate = cmd.getOptionValue("input_end_date");
@@ -112,7 +117,7 @@ public class StarterPipeline {
       System.out.println(NAME + " (Ver." + VERSION + ")");
       System.out.println(String.format("key:%s, input_begin_date:%s, input_end_date:%s", apiKey, inputBeginDate, inputEndDate));
 
-      AnalyticDataModel analyticDataModel = new AnalyticDataModel(inputTimezone, outputDate, outputTimezone);
+      AnalyticDataModel analyticDataModel = new AnalyticDataModel(userId, inputTimezone, outputDate, outputTimezone);
       RescuetimePresenter rescuetimePresneter = new RescuetimePresenter(analyticDataModel);
       rescuetimePresneter.load(apiKey, inputBeginDate, inputEndDate);
 

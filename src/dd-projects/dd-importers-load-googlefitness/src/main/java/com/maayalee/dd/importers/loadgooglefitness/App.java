@@ -69,6 +69,10 @@ public class App {
 
   public static void main(String[] args) {
     Options options = new Options();
+    
+    Option userIdOption = new Option("", "user_id", true, "");
+    userIdOption.setRequired(true);
+    options.addOption(userIdOption);
 
     Option beginTimeOption = new Option("", "begin_time", true, "");
     beginTimeOption.setRequired(true);
@@ -95,6 +99,7 @@ public class App {
     try {
       CommandLine cmd = parser.parse(options, args);
 
+      String userId = cmd.getOptionValue("user_id");
       String beginTime = cmd.getOptionValue("begin_time");
       String endTime = cmd.getOptionValue("end_time");
       String shardSizeString = cmd.getOptionValue("shard_size").replaceAll("\"", "");
@@ -117,10 +122,10 @@ public class App {
       }
       LOG.info(credential.getAccessToken());
 
-      DatasourcesModel datasources = new DatasourcesModel();
-      DatasetsModel datasets = new DatasetsModel();
-      AggregatedDatasetsModel aggregatedDatasets = new AggregatedDatasetsModel();
-      SessionsModel sessions = new SessionsModel();
+      DatasourcesModel datasources = new DatasourcesModel(userId);
+      DatasetsModel datasets = new DatasetsModel(userId);
+      AggregatedDatasetsModel aggregatedDatasets = new AggregatedDatasetsModel(userId);
+      SessionsModel sessions = new SessionsModel(userId);
       GoogleFitnessPresenter presetner = new GoogleFitnessPresenter(datasources, datasets, aggregatedDatasets, sessions);
       presetner.load(beginTime, endTime, credential.getAccessToken());
 

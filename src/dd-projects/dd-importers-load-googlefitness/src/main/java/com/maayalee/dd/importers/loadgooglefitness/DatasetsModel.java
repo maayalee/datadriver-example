@@ -7,8 +7,10 @@ import com.google.gson.JsonParser;
 
 public class DatasetsModel {
   private JsonArray array = new JsonArray();
+  private String userId;
   
-  public DatasetsModel() {
+  public DatasetsModel(String userId) {
+    this.userId = userId;
   }
 
   public void clear() {
@@ -28,6 +30,7 @@ public class DatasetsModel {
       JsonObject point = points.get(i).getAsJsonObject();
 
       JsonObject data = new JsonObject();
+      data.addProperty("user_id", userId);
       data.addProperty("minStartTimeNs", minStartTimeNs);
       data.addProperty("maxEndTimeNs", maxEndTimeNs);
       data.addProperty("dataSourceId", dataSourceId);
