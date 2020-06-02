@@ -1,3 +1,3 @@
 mvn compile exec:java ^
 -Dexec.mainClass=com.maayalee.dd.etls.creategooglefitnessbd.StarterPipeline ^
--Dexec.args="--runner=DataflowRunner --project=rising-field-212511 --stagingLocation=gs://datadriver-dataflow/binaries --templateLocation=gs://datadriver-dataflow/templates/dd-analyzers-create-json-bd --tempLocation=gs://datadriver-dataflow/temp --zone=asia-northeast1-c"
+-Dexec.args="--runner=DataflowRunner --project=fast-archive-274910 --region=asia-northeast1-c --templateLocation=gs://datadriver-dataflow-fast-archive-274910/templates/dd-etls-create-googlefitness --clusteringField=user_id --stagingLocation=gs://datadriver-dataflow-fast-archive-274910/tmp --tableSchemaAggregatedDatasetsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_aggregated_datasets.json --tableSchemaSessionsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_sessions.json"
