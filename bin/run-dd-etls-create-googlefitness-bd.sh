@@ -1,0 +1,15 @@
+java -jar dd-etls-create-googlefitness-bd.jar \
+--runner=DataflowRunner \
+--project=fast-archive-274910 \
+--region=asia-east1 \
+--tempLocation=gs://datadriver-dataflow-fast-archive-274910/tmp \
+--stagingLocation=gs://datadriver-dataflow-fast-archive-274910/tmp \
+--clusteringField=user_id \
+--beginTime=2020-06-06T00:00:00.00Z \
+--endTime=2020-06-06T23:59:59.99Z \
+--inputAggregatedDatasetsFilePattern=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness/20200606Z-*-aggregated-datasets-* \
+--inputSessionsFilePattern=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness/20200606Z-*-sessions-* \
+--tableSchemaAggregatedDatasetsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_aggregated_datasets.json \
+--tableSchemaSessionsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_sessions.json \
+--outputAggregatedDatasetsTable=fast-archive-274910:dw_datadriver.googlefitness_tbl_bd_aggregated_datasets$20200606 \
+--outputSessionsTable=fast-archive-274910:dw_datadriver.googlefitness_tbl_bd_sessions$20200606
