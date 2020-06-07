@@ -14,7 +14,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class AnalyticDataModel {
-  private static final Logger LOG = LoggerFactory.getLogger(StarterPipeline.class);
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
   
   private JsonArray array = new JsonArray();
   private String userId;

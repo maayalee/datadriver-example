@@ -30,7 +30,7 @@ public class GCSModel {
     InputStream is = App.class.getResourceAsStream("/service_account.json");
     if (null == is) {
       // jar 파일로 실행시 파일 접근
-      is = App.class.getResourceAsStream("/service_account.json");
+      is = App.class.getResourceAsStream("/resources/service_account.json");
     }
     return is;
   }

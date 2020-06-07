@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class RescuetimePresenter {
-  private static final Logger LOG = LoggerFactory.getLogger(StarterPipeline.class);
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
   public RescuetimePresenter(AnalyticDataModel analyticData) {
     this.analyticData = analyticData;

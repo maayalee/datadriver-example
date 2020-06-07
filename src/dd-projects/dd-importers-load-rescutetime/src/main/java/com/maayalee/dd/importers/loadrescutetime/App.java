@@ -50,8 +50,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class StarterPipeline {
-  private static final Logger LOG = LoggerFactory.getLogger(StarterPipeline.class);
+public class App {
+  private static final Logger LOG = LoggerFactory.getLogger(App.class);
   private static final String NAME = "Rescute time importer";
   private static final String VERSION = "1.0";;
 
