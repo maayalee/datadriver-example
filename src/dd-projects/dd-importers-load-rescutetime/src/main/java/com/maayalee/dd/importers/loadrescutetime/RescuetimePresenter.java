@@ -17,14 +17,14 @@ public class RescuetimePresenter {
     this.analyticData = analyticData;
   }
 
-  public void load(String apiKey, String beginDate, String endDate) throws IOException, ParseException {
+  public void load(String apiKey, String beginDate, String endDate) throws Exception {
     String url = String.format(
         "https://www.rescuetime.com/anapi/data?key=%s&restrict_begin=%s&restrict_end=%s&perspective=interval&resolution_time=hour",
         apiKey, beginDate, endDate);
     analyticData.load(requestHTTP(url));
   }
 
-  private String requestHTTP(String stringURL) throws IOException {
+  private String requestHTTP(String stringURL) throws Exception {
     LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
@@ -36,7 +36,7 @@ public class RescuetimePresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      inputStreamReader = new InputStreamReader(uc.getErrorStream());
+      throw new Exception(String.format("error code %d, error message: %", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;

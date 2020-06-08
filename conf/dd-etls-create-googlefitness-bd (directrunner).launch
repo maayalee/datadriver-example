@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/dd-etls-create-googlefitness-bd/src/main/java/com/maayalee/dd/etls/creategooglefitnessbd/StarterPipeline.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.etls.creategooglefitnessbd.StarterPipeline"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="dd-etls-create-json-bd"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--runner=DirectRunner&#13;&#10;--project=fast-archive-274910&#13;&#10;--tempLocation=gs://datadriver-dataflow-fast-archive-274910/tmp&#13;&#10;--stagingLocation=gs://datadriver-dataflow-fast-archive-274910/tmp&#13;&#10;--clusteringField=user_id&#13;&#10;--beginTime=2020-06-09T00:00:00.00Z&#13;&#10;--endTime=2020-06-09T23:59:59.99Z&#13;&#10;--inputAggregatedDatasetsFilePattern=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness/20200609Z-*-aggregated-datasets-*&#13;&#10;--inputSessionsFilePattern=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness/20200609Z-*-sessions-*&#13;&#10;--tableSchemaAggregatedDatasetsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_aggregated_datasets.json&#13;&#10;--tableSchemaSessionsJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/googlefitness_tbl_bd_sessions.json&#13;&#10;--outputAggregatedDatasetsTable=fast-archive-274910:dw_datadriver.googlefitness_tbl_bd_aggregated_datasets$20200609&#13;&#10;--outputSessionsTable=fast-archive-274910:dw_datadriver.googlefitness_tbl_bd_sessions$20200609"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dd-etls-create-googlefitness-bd"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+</launchConfiguration>

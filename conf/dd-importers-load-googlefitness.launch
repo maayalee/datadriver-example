@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-        <listEntry value="/dd-importers-load-googlefitness/src/main/java/com/maayalee/dd/importers/googlefitness/App.java"/>
+        <listEntry value="/dd-importers-load-googlefitness/src/main/java/com/maayalee/dd/importers/loadgooglefitness/App.java"/>
     </listAttribute>
     <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
         <listEntry value="1"/>
@@ -9,9 +9,10 @@
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
     <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
     <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
-    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.importers.googlefitness.App"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.importers.loadgooglefitness.App"/>
     <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="dd-importers-load-googlefitness"/>
-    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-begin_time=2020-04-22T00:00:00.00+09:00&#13;&#10;-end_time=2020-04-22T23:59:59.99+09:00&#13;&#10;-output_directory=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness&#13;&#10;-output_filenameprefix=20200422+9:00-&#13;&#10;-shard_size=2"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-user_id=maayalee&#13;&#10;-begin_time=2020-05-23T00:00:00.00Z&#13;&#10;-end_time=2020-05-23T23:59:59.99Z&#13;&#10;-output_directory=gs://datadriver-datalake-fast-archive-274910/data/log/googlefitness&#13;&#10;-output_filenameprefix=20200523Z-maayalee-&#13;&#10;-shard_size=3"/>
     <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dd-importers-load-googlefitness"/>
     <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.VM_ARGUMENTS" value="-Djava.util.logging.config.file=logging.properties"/>
 </launchConfiguration>

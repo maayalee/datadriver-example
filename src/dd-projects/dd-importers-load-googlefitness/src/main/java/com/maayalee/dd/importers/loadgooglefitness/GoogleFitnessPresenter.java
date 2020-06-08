@@ -67,7 +67,7 @@ public class GoogleFitnessPresenter {
     }
   }
 
-  private String request(String stringURL, String accessToken) throws IOException {
+  private String request(String stringURL, String accessToken) throws Exception {
     LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
@@ -80,7 +80,7 @@ public class GoogleFitnessPresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      inputStreamReader = new InputStreamReader(uc.getErrorStream());
+      throw new Exception(String.format("error code %d, error message: %", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;

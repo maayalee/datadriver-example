@@ -1,0 +1,15 @@
+[Unit]
+Description=Airflow worker daemon
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Environment="AIRFLOW_HOME=/home/maaya_lee/airflow"
+Type=simple
+ExecStart=/usr/bin/python3 /usr/local/bin/airflow worker -p 80 --pid ${AIRFLOW_HOME}/airflow-worker.pid
+Restart=on-failure
+RestartSec=5s
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

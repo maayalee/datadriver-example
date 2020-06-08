@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.jdt.launching.localJavaApplication">
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
+        <listEntry value="/dd-etls-create-rescuetime-bd/src/main/java/com/maayalee/dd/etls/createrescuetimebd/StarterPipeline.java"/>
+    </listAttribute>
+    <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
+        <listEntry value="1"/>
+    </listAttribute>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_CLASSPATH_ONLY_JAR" value="false"/>
+    <booleanAttribute key="org.eclipse.jdt.launching.ATTR_USE_START_ON_FIRST_THREAD" value="true"/>
+    <stringAttribute key="org.eclipse.jdt.launching.CLASSPATH_PROVIDER" value="org.eclipse.m2e.launchconfig.classpathProvider"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="com.maayalee.dd.etls.createrescuetimebd.StarterPipeline"/>
+    <stringAttribute key="org.eclipse.jdt.launching.MODULE_NAME" value="dd-etls-create-rescuetime-bd"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="--runner=DirectRunner&#13;&#10;--project=fast-archive-274910&#13;&#10;--tempLocation=gs://datadriver-dataflow-fast-archive-274910/tmp&#13;&#10;--stagingLocation=gs://datadriver-dataflow-fast-archive-274910/tmp&#13;&#10;--inputFilePattern=gs://datadriver-datalake-fast-archive-274910/data/log/rescuetime/20200516Z-*&#13;&#10;--tableSchemaJSONPath=gs://datadriver-dataflow-fast-archive-274910/schemas/rescuetime_tbl_bd_data.json&#13;&#10;--outputTable=fast-archive-274910:dw_datadriver.rescuetime_tbl_bd_data$20200516"/>
+    <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="dd-etls-create-rescuetime-bd"/>
+    <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.m2e.launchconfig.sourcepathProvider"/>
+</launchConfiguration>
