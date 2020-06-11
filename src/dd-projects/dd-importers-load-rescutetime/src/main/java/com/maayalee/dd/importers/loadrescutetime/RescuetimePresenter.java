@@ -36,7 +36,7 @@ public class RescuetimePresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      throw new Exception(String.format("error code %d, error message: s%", uc.getResponseCode(), uc.getResponseMessage()));
+      throw new Exception(String.format("error code %d, error message: %s", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;

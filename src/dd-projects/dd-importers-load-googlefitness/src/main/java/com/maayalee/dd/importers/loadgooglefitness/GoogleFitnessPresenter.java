@@ -69,6 +69,7 @@ public class GoogleFitnessPresenter {
   }
 
   private String request(String stringURL, String accessToken) throws Exception {
+    Thread.sleep(1000);
     LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
@@ -81,7 +82,7 @@ public class GoogleFitnessPresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      throw new Exception(String.format("error code %d, error message: s%", uc.getResponseCode(), uc.getResponseMessage()));
+      throw new Exception(String.format("error code %d, error message: %s", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;
@@ -94,6 +95,7 @@ public class GoogleFitnessPresenter {
   }
   
   private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end, long durationMillis) throws Exception {
+    Thread.sleep(1000);
     LOG.info(stringURL);
     Map<String,Object> aggregateBy = new LinkedHashMap<>();
     aggregateBy.put("dataTypeName", dataTypeName);
@@ -127,7 +129,7 @@ public class GoogleFitnessPresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      throw new Exception(String.format("error code %d, error message: s%", uc.getResponseCode(), uc.getResponseMessage()));
+      throw new Exception(String.format("error code %d, error message: %s", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;
