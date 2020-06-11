@@ -9,7 +9,8 @@ from datetime import date, timedelta, datetime
 from pytz import timezone
 
 default_dag_args = {
-        'start_date': datetime(2020, 5, 21),
+        #'start_date': datetime(2018, 7, 1),
+        "start_date": airflow.utils.dates.days_ago(1),
         'dataflow_default_options': {
             'project': 'fast-archive-274910',
             'region':'asia-northeast1',

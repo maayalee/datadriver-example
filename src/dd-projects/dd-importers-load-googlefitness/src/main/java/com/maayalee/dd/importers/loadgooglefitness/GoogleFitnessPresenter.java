@@ -64,6 +64,7 @@ public class GoogleFitnessPresenter {
     for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
       // 타임존에 따른 조회를 위해 30분 단위로 가져온다.
       aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 1800000));
+      //aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
     }
   }
 
@@ -80,7 +81,7 @@ public class GoogleFitnessPresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      throw new Exception(String.format("error code %d, error message: %", uc.getResponseCode(), uc.getResponseMessage()));
+      throw new Exception(String.format("error code %d, error message: s%", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;
@@ -92,7 +93,7 @@ public class GoogleFitnessPresenter {
     return sb.toString();
   }
   
-  private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end, long durationMillis) throws IOException {
+  private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end, long durationMillis) throws Exception {
     LOG.info(stringURL);
     Map<String,Object> aggregateBy = new LinkedHashMap<>();
     aggregateBy.put("dataTypeName", dataTypeName);
@@ -126,7 +127,7 @@ public class GoogleFitnessPresenter {
     if (200 <= uc.getResponseCode() && uc.getResponseCode() <= 299) {
       inputStreamReader = new InputStreamReader(uc.getInputStream());
     } else {
-      inputStreamReader = new InputStreamReader(uc.getErrorStream());
+      throw new Exception(String.format("error code %d, error message: s%", uc.getResponseCode(), uc.getResponseMessage()));
     }
     BufferedReader br = new BufferedReader(inputStreamReader);
     String temp;
