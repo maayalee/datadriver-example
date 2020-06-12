@@ -69,7 +69,7 @@ public class GoogleFitnessPresenter {
   }
 
   private String request(String stringURL, String accessToken) throws Exception {
-    Thread.sleep(1000);
+    Thread.sleep(1000); // Too Many Requests 에러 방지
     LOG.info(stringURL);
     URL url = new URL(stringURL);
     HttpURLConnection uc = (HttpURLConnection) url.openConnection();
@@ -95,7 +95,7 @@ public class GoogleFitnessPresenter {
   }
   
   private String requestAggregate(String stringURL, String dataTypeName, String accessToken, long begin, long end, long durationMillis) throws Exception {
-    Thread.sleep(1000);
+    Thread.sleep(1000); // Too Many Requests 에러 방지
     LOG.info(stringURL);
     Map<String,Object> aggregateBy = new LinkedHashMap<>();
     aggregateBy.put("dataTypeName", dataTypeName);
