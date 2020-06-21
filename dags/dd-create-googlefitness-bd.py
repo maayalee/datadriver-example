@@ -26,18 +26,18 @@ default_dag_args = {
 
 dag = DAG(
         'dd-create-googlefitness-bd-v1',
-        schedule_interval='0 16 * * *',
+        schedule_interval='0 0 * * *',
         default_args=default_dag_args)
 
-begin_times = ['{{ macros.ds_add(ds, 0) }}T00:00:00.00Z', '{{ macros.ds_add(ds, 1) }}T00:00:00.00Z']
-end_times = ['{{ macros.ds_add(ds, 0) }}T23:59:59.99Z', '{{ macros.ds_add(ds, 1) }}T23:59:59.99Z']
+begin_times = ['{{ macros.ds_add(ds, -1) }}T00:00:00.00Z', '{{ macros.ds_add(ds, 0) }}T00:00:00.00Z']
+end_times = ['{{ macros.ds_add(ds, -1) }}T23:59:59.99Z', '{{ macros.ds_add(ds, 0) }}T23:59:59.99Z']
 filename_prefixes = [
-  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-', 
-  '{{ macros.ds_format(macros.ds_add(ds, 1), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-'
+  '{{ macros.ds_format(macros.ds_add(ds, -1), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-', 
+  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-'
 ]
 bd_dates = [
-  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}', 
-  '{{ macros.ds_format(macros.ds_add(ds, 1), "%Y-%m-%d", "%Y%m%d") }}'
+  '{{ macros.ds_format(macros.ds_add(ds, -1), "%Y-%m-%d", "%Y%m%d") }}', 
+  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}'
 ]
 
 # 한국시 기준 데이터로 보여주기 위해 UTC 기준2일치 데이터를 처리

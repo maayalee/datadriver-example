@@ -27,18 +27,18 @@ default_dag_args = {
 
 dag = DAG(
         'dd-create-rescuetime-bd-v1',
-        schedule_interval='0 16 * * *',
+        schedule_interval='0 0 * * *',
         default_args=default_dag_args)
 
-input_begin_dates = ['{{ macros.ds_add(ds, 0) }}', '{{ macros.ds_add(ds, 1) }}']
-input_end_dates = ['{{ macros.ds_add(ds, 1) }}', '{{ macros.ds_add(ds, 2) }}']
+input_begin_dates = ['{{ macros.ds_add(ds, -1) }}', '{{ macros.ds_add(ds, 0) }}']
+input_end_dates = ['{{ macros.ds_add(ds, 0) }}', '{{ macros.ds_add(ds, 1) }}']
 output_filename_prefixes = [
-  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-', 
-  '{{ macros.ds_format(macros.ds_add(ds, 1), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-'
+  '{{ macros.ds_format(macros.ds_add(ds, -1), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-', 
+  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}Z-' + user_id + '-'
 ]
 bd_dates = [
-  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}', 
-  '{{ macros.ds_format(macros.ds_add(ds, 1), "%Y-%m-%d", "%Y%m%d") }}'
+  '{{ macros.ds_format(macros.ds_add(ds, -1), "%Y-%m-%d", "%Y%m%d") }}', 
+  '{{ macros.ds_format(macros.ds_add(ds, 0), "%Y-%m-%d", "%Y%m%d") }}'
 ]
 
 # 한국시 기준 데이터로 보여주기 위해 UTC 기준2일치 데이터를 처리
