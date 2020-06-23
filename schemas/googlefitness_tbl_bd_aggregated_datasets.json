@@ -5,44 +5,43 @@
       "name": "user_id",
       "type": "STRING",
       "mode": "",
-      "is_clustering": true,
       "description":""
     },
     {
       "name": "dataSourceId",
       "type": "STRING",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "startTimeNanos",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "endTimeNanos",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "dataTypeName",
       "type": "STRING",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "value0_fpVal",
       "type": "FLOAT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "value0_intVal",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     }
   ]
 }

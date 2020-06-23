@@ -47,11 +47,12 @@ public class StarterPipeline {
       PCollection<TableRow> tableRows = aggregatedDatasetsLines.apply("CreateBDRows - AggregatedDatasets", 
           ParDo.of(new CreateTableRow(aggregatedDatasetSchemaProvider)));
 
+      Clustering clustering = createClustering(options.getClusteringField());
       Write<TableRow> aggregatedDatasetsWrite = BigQueryIO.writeTableRows().to(
           options.getOutputAggregatedDatasetsTable())
           .withSchema(loadSchema(options.getTableSchemaAggregatedDatasetsJSONPath()))
           .withTimePartitioning(new TimePartitioning().setType("DAY"))
-          .withClustering(loadClustering(options.getTableSchemaAggregatedDatasetsJSONPath()))
+          .withClustering(clustering)
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
           .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE);
       tableRows.apply("WriteDB - AggregatedDatasets", aggregatedDatasetsWrite);
@@ -70,7 +71,7 @@ public class StarterPipeline {
       Write<TableRow> sessionWrite = BigQueryIO.writeTableRows().to(options.getOutputSessionsTable())
           .withSchema(loadSchema(options.getTableSchemaSessionsJSONPath()))
           .withTimePartitioning(new TimePartitioning().setType("DAY"))
-          .withClustering(loadClustering(options.getTableSchemaSessionsJSONPath()))
+          .withClustering(clustering)
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
           .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE);
       tableRows.apply("WriteDB - Sessions", sessionWrite);
@@ -106,25 +107,13 @@ public class StarterPipeline {
     } 
   }
 
-  private static Clustering loadClustering(String schemaPath) {
-    SchemaParser parser = new SchemaParser();
-    try {
-      JSONObject jsonSchema = parser.parseSchema(schemaPath);
-      List<String> clusteringFields = new ArrayList<String>();
-      JSONArray fields = jsonSchema.getJSONArray("fields");
-      for (int i = 0; i < fields.length(); ++i) {
-        JSONObject field = fields.getJSONObject(i);
-        if (field.getBoolean("is_clustering")) {
-          clusteringFields.add(field.getString("name"));
-        }
-      }
-
-      Clustering clustering = new Clustering();
-      return clustering.setFields(clusteringFields);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+   private static Clustering createClustering(String field) {
+    List<String> clusteringFields = new ArrayList<String>();
+    clusteringFields.add(field);
+    Clustering clustering = new Clustering();
+    return clustering.setFields(clusteringFields);
   }
+
 
   @SuppressWarnings("serial")
   private static SerializableFunction<String, TableSchema> createSerializableLoadSchema() {

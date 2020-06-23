@@ -5,45 +5,43 @@
       "name": "user_id",
       "type": "STRING",
       "mode": "",
-      "is_clustering": true,
       "description":""
     },
     {
       "name": "date_timestamp_millis",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false,
       "description":""
     },
     {
       "name": "time_spent_seconds",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "activity",
       "type": "STRING",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "category",
       "type": "STRING",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "productivity_string",
       "type": "STRING",
       "mode": "",
-      "is_clustering": false
+      "description":""
     },
     {
       "name": "productivity",
       "type": "INT64",
       "mode": "",
-      "is_clustering": false
+      "description":""
     }
   ]
 }
