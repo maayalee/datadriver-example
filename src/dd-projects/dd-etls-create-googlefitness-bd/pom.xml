@@ -28,7 +28,7 @@
 
   <properties>
 	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <beam.version>2.21.0</beam.version>
+    <beam.version>2.22.0</beam.version>
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
     <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
