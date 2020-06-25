@@ -23,7 +23,7 @@ public class GoogleFitnessPresenter {
   private static final Logger LOG = LoggerFactory.getLogger(App.class);
 
   // AGGREGATION 요청할 데이터 타입 (https://developers.google.com/android/reference/com/google/android/gms/fitness/data/DataType)
-  private static final String[] aggregatedDataTypeNames = {
+  private static final String[] aggregateDataTypeNames = {
       "com.google.step_count.delta",
       "com.google.distance.delta",
       "com.google.calories.expended",
@@ -32,10 +32,10 @@ public class GoogleFitnessPresenter {
   
   private DatasourcesModel datasources;
   private DatasetsModel datasets;
-  private AggregatedDatasetsModel aggregatedDatasetsModel;
+  private AggregateDatasetsModel aggregatedDatasetsModel;
   private SessionsModel sessions;
 
-  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, AggregatedDatasetsModel aggregatedDatasets, SessionsModel sessions) {
+  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, AggregateDatasetsModel aggregatedDatasets, SessionsModel sessions) {
     this.datasources = datasources;
     this.datasets = datasets;
     this.aggregatedDatasetsModel = aggregatedDatasets;
@@ -46,12 +46,11 @@ public class GoogleFitnessPresenter {
     String url = String.format("https://www.googleapis.com/fitness/v1/users/me/sessions?startTime=%s&endTime=%s",
         URLEncoder.encode(beginTime, "utf-8"), URLEncoder.encode(endTime, "utf-8"));
     sessions.load(request(url, accessToken));
-
+    
+    datasources.load(request("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
+    
     long begin = DateTime.parseRfc3339(beginTime).getValue() * 1000000;
     long end = DateTime.parseRfc3339(endTime).getValue() * 1000000;
-
-    datasources.load(request("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
-
     for (JsonElement source : datasources.getDatasources()) {
       String dataStreamId = source.getAsJsonObject().get("dataStreamId").getAsString();
       LOG.debug(dataStreamId);
@@ -61,10 +60,9 @@ public class GoogleFitnessPresenter {
       datasets.load(request(url, accessToken));
     }
    
-    for (int i = 0; i < aggregatedDataTypeNames.length; ++i) {
+    for (int i = 0; i < aggregateDataTypeNames.length; ++i) {
       // 타임존에 따른 조회를 위해 30분 단위로 가져온다.
-      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 1800000));
-      //aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregatedDataTypeNames[i], accessToken, begin, end, 86400000));
+      aggregatedDatasetsModel.load(requestAggregate("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", aggregateDataTypeNames[i], accessToken, begin, end, 1800000));
     }
   }
 

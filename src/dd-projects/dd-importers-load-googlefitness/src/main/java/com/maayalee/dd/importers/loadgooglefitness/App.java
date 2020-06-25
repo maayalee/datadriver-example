@@ -102,15 +102,14 @@ public class App {
       String userId = cmd.getOptionValue("user_id");
       String beginTime = cmd.getOptionValue("begin_time");
       String endTime = cmd.getOptionValue("end_time");
-      String shardSizeString = cmd.getOptionValue("shard_size").replaceAll("\"", "");
-      int shardSize = Integer.parseInt(shardSizeString);
+      int shardSize = Integer.parseInt(cmd.getOptionValue("shard_size"));
       String outputDirectory = cmd.getOptionValue("output_directory");
       String outputFilenamePrefix = cmd.getOptionValue("output_filenameprefix");
 
       LOG.info(NAME + " (Ver." + VERSION + ")");
-      LOG.info(String.format("begin_time:%s, end_time:%s, shard_size:%s", beginTime, endTime, shardSizeString));
-      LOG.info(String.format("output_directory:%s, output_filenameprefix:%s, shard_size:%s", outputDirectory,
-          outputFilenamePrefix, shardSizeString));
+      LOG.info(String.format("begin_time:%s, end_time:%s, shard_size:%d", beginTime, endTime, shardSize));
+      LOG.info(String.format("output_directory:%s, output_filenameprefix:%s, shard_size:%d", outputDirectory,
+          outputFilenamePrefix, shardSize));
 
       httpTransport = GoogleNetHttpTransport.newTrustedTransport();
       dataStoreFactory = new FileDataStoreFactory(DATA_STORE_DIR);
@@ -124,7 +123,7 @@ public class App {
 
       DatasourcesModel datasources = new DatasourcesModel(userId);
       DatasetsModel datasets = new DatasetsModel(userId);
-      AggregatedDatasetsModel aggregatedDatasets = new AggregatedDatasetsModel(userId);
+      AggregateDatasetsModel aggregatedDatasets = new AggregateDatasetsModel(userId);
       SessionsModel sessions = new SessionsModel(userId);
       GoogleFitnessPresenter presetner = new GoogleFitnessPresenter(datasources, datasets, aggregatedDatasets, sessions);
       presetner.load(beginTime, endTime, credential.getAccessToken());

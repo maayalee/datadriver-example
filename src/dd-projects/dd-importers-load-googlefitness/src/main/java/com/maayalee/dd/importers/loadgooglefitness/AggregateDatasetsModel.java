@@ -5,11 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-public class AggregatedDatasetsModel {
+public class AggregateDatasetsModel {
   private JsonArray array = new JsonArray();
   private String userId;
 
-  public AggregatedDatasetsModel(String userId) {
+  public AggregateDatasetsModel(String userId) {
     this.userId = userId;
   }
   
