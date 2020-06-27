@@ -35,16 +35,17 @@ public class StarterPipeline {
           .as(CreateBDOptions.class);
       LOG.info("appname:" + options.getAppName());
 
-      Pipeline p = Pipeline.create(options);
-      PCollection<String> lines = p.apply("ReadJSONLines", TextIO.read().from(
-          options.getInputFilePattern()));
-      
+      Pipeline pipeline = Pipeline.create(options);
+
       NestedValueProvider<TableSchema, String> schemaProvider = NestedValueProvider.of(
           StaticValueProvider.of(options.getTableSchemaJSONPath()),
           createSerializableLoadSchema());
-      PCollection<TableRow> tableRows = lines.apply("CreateBDRows", 
+
+      PCollection<String> lines = pipeline.apply("ReadJSONLines", TextIO.read().from(
+          options.getInputFilePattern()));
+      PCollection<TableRow> tableRows = lines.apply("CreateTableRows", 
           ParDo.of(new CreateTableRow(schemaProvider)));
-      
+
       SchemaParser parser = new SchemaParser();
       Write<TableRow> write = BigQueryIO.writeTableRows().to(options.getOutputTable())
           .withSchema(parser.parseSchema(options.getTableSchemaJSONPath()))
@@ -53,7 +54,8 @@ public class StarterPipeline {
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
           .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE);
       tableRows.apply("WriteDB", write);
-      p.run();
+      
+      pipeline.run();
     } catch (NullPointerException e) {
       LOG.error("NullPointerException occured: " + getStackTrace(e));
     } catch (Exception e) {

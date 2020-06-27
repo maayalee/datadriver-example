@@ -4,37 +4,37 @@
     {
       "name": "user_id",
       "type": "STRING",
-      "description":""
+      "description":"어떤 유저의 데이터인지 식별하기 위한 아이디"
     },
     {
       "name": "date_timestamp_millis",
       "type": "INT64",
-      "description":""
+      "description":"활동이 일어난 시각. 1시간 단위"
     },
     {
       "name": "time_spent_seconds",
       "type": "INT64",
-      "description":""
+      "description":"활동에 사용한 시간(초)"
     },
     {
       "name": "activity",
       "type": "STRING",
-      "description":""
+      "description":"활동명. 활동 마다 특정 카테고리에 속한다"
     },
     {
       "name": "category",
       "type": "STRING",
-      "description":""
+      "description":"활동 카테고리"
     },
     {
       "name": "productivity_string",
       "type": "STRING",
-      "description":""
+      "description":"생산성 타입(문자열). very produtive, productive, neutral, distracting, very distracting"
     },
     {
       "name": "productivity",
       "type": "INT64",
-      "description":""
+      "description":"생산성 타입. 2, 1, 0, -1, -2"
     }
   ]
 }

@@ -35,47 +35,49 @@ public class StarterPipeline {
       CreateBDOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
           .as(CreateBDOptions.class);
       LOG.info("appname:" + options.getAppName());
-
+      
       Pipeline pipeline = Pipeline.create(options);
-      PCollection<String> aggregatedDatasetsLines = pipeline.apply("ReadJSONLines - AggregatedDatasets", 
-          TextIO.read().from(options.getInputAggregatedDatasetsFilePattern()));
-
+      
+      // aggregate datasets 데이터 처리 
       NestedValueProvider<TableSchema, String> aggregatedDatasetSchemaProvider = NestedValueProvider.of(
           StaticValueProvider.of(options.getTableSchemaAggregatedDatasetsJSONPath()),
           createSerializableLoadSchema());
-      PCollection<TableRow> tableRows = aggregatedDatasetsLines.apply("CreateBDRows - AggregatedDatasets", 
+      PCollection<String> lines = pipeline.apply(
+          "ReadJSONLines - AggregatedDatasets", 
+          TextIO.read().from(options.getInputAggregatedDatasetsFilePattern()));
+      PCollection<TableRow> tableRows = lines.apply(
+          "CreateTableRows - AggregatedDatasets", 
           ParDo.of(new CreateTableRow(aggregatedDatasetSchemaProvider)));
 
       SchemaParser parser = new SchemaParser();
-      Clustering clustering = createClustering(options.getClusteringField());
-      Write<TableRow> aggregatedDatasetsWrite = BigQueryIO.writeTableRows().to(
+      Write<TableRow> write = BigQueryIO.writeTableRows().to(
           options.getOutputAggregatedDatasetsTable())
           .withSchema(parser.parseSchema(options.getTableSchemaAggregatedDatasetsJSONPath()))
           .withTimePartitioning(new TimePartitioning().setType("DAY"))
-          .withClustering(clustering)
+          .withClustering(createClustering(options.getClusteringField()))
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
           .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE);
-      tableRows.apply("WriteDB - AggregatedDatasets", aggregatedDatasetsWrite);
+      tableRows.apply("WriteDB - AggregatedDatasets", write);
 
+      // sessions 데이터 처리 
       NestedValueProvider<TableSchema, String> sessionSchemaProvider = NestedValueProvider.of(
-          StaticValueProvider.of(options.getTableSchemaSessionsJSONPath()),
-          createSerializableLoadSchema()
-          );
+          StaticValueProvider.of(options.getTableSchemaSessionsJSONPath()), createSerializableLoadSchema());
 
-      PCollection<String> sessionlines = pipeline.apply("ReadJSONLines - Sessions", 
+      lines = pipeline.apply("ReadJSONLines - Sessions", 
           TextIO.read().from(options.getInputSessionsFilePattern()));
-      tableRows = sessionlines.apply("CreateBDRows - Sessions", 
+      tableRows = lines.apply("CreateTableRows - Sessions", 
           ParDo.of(new CreateTableRow(sessionSchemaProvider)));
-      tableRows = tableRows.apply("FilteringRows - Sessions", 
+      tableRows = tableRows.apply("CreateDivideTimeRows - Sessions", 
           ParDo.of(new DivideTime(options.getBeginTime(), options.getEndTime())));
 
-      Write<TableRow> sessionWrite = BigQueryIO.writeTableRows().to(options.getOutputSessionsTable())
+      write = BigQueryIO.writeTableRows().to(options.getOutputSessionsTable())
           .withSchema(parser.parseSchema(options.getTableSchemaSessionsJSONPath()))
           .withTimePartitioning(new TimePartitioning().setType("DAY"))
-          .withClustering(clustering)
+          .withClustering(createClustering(options.getClusteringField()))
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
           .withWriteDisposition(WriteDisposition.WRITE_TRUNCATE);
-      tableRows.apply("WriteDB - Sessions", sessionWrite);
+      tableRows.apply("WriteDB - Sessions", write);
+      
       pipeline.run();
     } catch (NullPointerException e) {
       LOG.error("NullPointerException occured: " + getStackTrace(e));
