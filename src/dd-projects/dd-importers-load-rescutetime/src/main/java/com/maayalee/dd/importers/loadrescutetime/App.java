@@ -138,9 +138,6 @@ public class App {
       LOG.info(e.getMessage());
       formatter.printHelp(NAME, options);
       System.exit(1);
-    } catch (NullPointerException e) {
-      LOG.error("NullPointerException occured: " + getStackTrace(e));
-      System.exit(1);
     } catch (Exception e) {
       LOG.error("Excpetion occured: " + getStackTrace(e));
       System.exit(1);

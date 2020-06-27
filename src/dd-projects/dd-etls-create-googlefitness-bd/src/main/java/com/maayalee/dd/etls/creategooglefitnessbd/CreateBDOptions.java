@@ -4,7 +4,7 @@ import org.apache.beam.sdk.options.Description;
 import org.apache.beam.sdk.options.ValueProvider;
 import org.apache.beam.runners.dataflow.options.DataflowPipelineOptions;
 
-public interface CreateJsonBDOptions extends DataflowPipelineOptions {
+public interface CreateBDOptions extends DataflowPipelineOptions {
   @Description("Begin range time")
   ValueProvider<String> getBeginTime();
   void setBeginTime(ValueProvider<String> value);

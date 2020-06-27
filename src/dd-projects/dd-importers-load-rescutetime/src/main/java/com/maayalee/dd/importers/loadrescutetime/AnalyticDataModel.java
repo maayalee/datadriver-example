@@ -37,7 +37,6 @@ public class AnalyticDataModel {
     JsonParser jsonParser = new JsonParser();
     JsonElement element = jsonParser.parse(jsonString);
     JsonArray row_headers = element.getAsJsonObject().get("row_headers").getAsJsonArray();
-
     JsonArray rows = element.getAsJsonObject().get("rows").getAsJsonArray();
 
     // 로그의 시간을 어떤 타임존 시간대로 처리할지 설정

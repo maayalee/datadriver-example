@@ -4,63 +4,47 @@
     {
       "name": "user_id",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"어떤 유저의 데이터인지 식별하기 위한 아이디"
     },
     {
       "name": "id",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"세션 데이터 식별을 위한 아이디"
     },
     {
       "name": "name",
       "type": "STRING",
-      "mode": "",
-      "description":""
-    },
-    {
-      "name": "description",
-      "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"세션 데이터 이름"
     },
     {
       "name": "startTimeMillis",
       "type": "INT64",
-      "mode": "",
-      "description":"행동의 시작 시간"
+      "description":"특정 행동의 시작 시각"
     },
     {
       "name": "endTimeMillis",
       "type": "INT64",
-      "mode": "",
-      "description":"행동의 완료 시간"
+      "description":"특정 행동의 완료 시각"
     },
     {
       "name": "modifiedTimeMillis",
       "type": "INT64",
-      "mode": "",
-      "description":""
+      "description":"세션 정보가 수정된 시각"
     },
     {
       "name": "application_packageName",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"세션 데이터가 발생한 어플리케이션 패키지명"
     },
     {
       "name": "activityType",
       "type": "INT64",
-      "mode": "",
-      "description":""
+      "description":"행동의 종류"
     },
     {
       "name": "activityType_String",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"행동의 종류(문자열 타입)"
     }
-  ],
-  "description":"어떤 행동을 어느 시간동안 했는지에 대한 정보"
+  ]
 }

@@ -7,13 +7,10 @@ import java.util.List;
 
 import org.apache.beam.sdk.options.PipelineOptionsFactory;
 import org.apache.beam.sdk.transforms.SerializableFunction;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.api.services.bigquery.model.Clustering;
-import com.google.api.services.bigquery.model.TableFieldSchema;
 import com.google.api.services.bigquery.model.TableSchema;
 import org.apache.beam.sdk.Pipeline;
 import org.apache.beam.sdk.io.TextIO;
@@ -34,8 +31,8 @@ public class StarterPipeline {
 
   public static void main(String[] args) {
     try {
-      CreateJsonBDOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
-          .as(CreateJsonBDOptions.class);
+      CreateBDOptions options = PipelineOptionsFactory.fromArgs(args).withValidation()
+          .as(CreateBDOptions.class);
       LOG.info("appname:" + options.getAppName());
 
       Pipeline p = Pipeline.create(options);
@@ -48,8 +45,9 @@ public class StarterPipeline {
       PCollection<TableRow> tableRows = lines.apply("CreateBDRows", 
           ParDo.of(new CreateTableRow(schemaProvider)));
       
+      SchemaParser parser = new SchemaParser();
       Write<TableRow> write = BigQueryIO.writeTableRows().to(options.getOutputTable())
-          .withSchema(loadSchema(options.getTableSchemaJSONPath()))
+          .withSchema(parser.parseSchema(options.getTableSchemaJSONPath()))
           .withTimePartitioning(new TimePartitioning().setType("DAY"))
           .withClustering(createClustering(options.getClusteringField()))
           .withCreateDisposition(CreateDisposition.CREATE_IF_NEEDED)
@@ -66,26 +64,6 @@ public class StarterPipeline {
     }
   }
 
-  private static TableSchema loadSchema(String schemaPath) {
-    SchemaParser parser = new SchemaParser();
-    try {
-      JSONObject jsonSchema = parser.parseSchema(schemaPath);
-      JSONArray fields = jsonSchema.getJSONArray("fields");
-      List<TableFieldSchema> schemaFields = new ArrayList<TableFieldSchema>();
-      for (int i = 0; i < fields.length(); ++i) {
-        JSONObject field = fields.getJSONObject(i);
-        TableFieldSchema schema = new TableFieldSchema().setName(field.getString("name"));
-        schema.setType(field.getString("type"));
-        if (field.getString("mode").length() > 0) {
-          schema.setMode(field.getString("mode"));
-        }
-        schemaFields.add(schema);
-      }
-      return new TableSchema().setFields(schemaFields);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    } 
-  }
 
   private static Clustering createClustering(String field) {
     List<String> clusteringFields = new ArrayList<String>();
@@ -99,7 +77,8 @@ public class StarterPipeline {
     return new SerializableFunction<String, TableSchema>() {
       @Override
       public TableSchema apply(String jsonPath) {
-        return loadSchema(jsonPath);
+        SchemaParser parser = new SchemaParser();
+        return parser.parseSchema(jsonPath);
       }
     };
   }

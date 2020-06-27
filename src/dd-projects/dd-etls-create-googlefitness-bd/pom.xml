@@ -152,13 +152,6 @@
       <version>${beam.version}</version>
     </dependency>
 
-    <!--
-      By default, the starter project has a dependency on the Beam DirectRunner
-      to enable development and testing of pipelines. To run on another of the
-      Beam runners, add its module to this pom.xml according to the
-      runner-specific setup instructions on the Beam website:
-        http://beam.apache.org/documentation/#runners
-    -->
     <dependency>
       <groupId>org.apache.beam</groupId>
       <artifactId>beam-runners-direct-java</artifactId>

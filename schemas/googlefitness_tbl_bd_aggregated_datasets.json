@@ -4,44 +4,37 @@
     {
       "name": "user_id",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"어떤 유저의 데이터인지 식별하기 위한 아이디"
     },
     {
       "name": "dataSourceId",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터가 발생한 소스 아이디"
     },
     {
       "name": "startTimeNanos",
       "type": "INT64",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터의 발생이 시작된 시각"
     },
     {
       "name": "endTimeNanos",
       "type": "INT64",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터 발생이 완료된 시각"
     },
     {
       "name": "dataTypeName",
       "type": "STRING",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터 타입"
     },
     {
       "name": "value0_fpVal",
       "type": "FLOAT64",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터의 값. 실수형이 아니면 null"
     },
     {
       "name": "value0_intVal",
       "type": "INT64",
-      "mode": "",
-      "description":""
+      "description":"피트니스 데이터의 값. 정수형이 아니면 null"
     }
   ]
 }

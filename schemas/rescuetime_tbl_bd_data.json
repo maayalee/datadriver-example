@@ -4,43 +4,36 @@
     {
       "name": "user_id",
       "type": "STRING",
-      "mode": "",
       "description":""
     },
     {
       "name": "date_timestamp_millis",
       "type": "INT64",
-      "mode": "",
       "description":""
     },
     {
       "name": "time_spent_seconds",
       "type": "INT64",
-      "mode": "",
       "description":""
     },
     {
       "name": "activity",
       "type": "STRING",
-      "mode": "",
       "description":""
     },
     {
       "name": "category",
       "type": "STRING",
-      "mode": "",
       "description":""
     },
     {
       "name": "productivity_string",
       "type": "STRING",
-      "mode": "",
       "description":""
     },
     {
       "name": "productivity",
       "type": "INT64",
-      "mode": "",
       "description":""
     }
   ]
