@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import airflow
 from airflow.models import DAG
 from airflow.operators import bash_operator
