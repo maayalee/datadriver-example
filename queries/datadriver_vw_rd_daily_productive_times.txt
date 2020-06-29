@@ -1,0 +1,75 @@
+SELECT
+  A.date,
+  A.date_year_month,
+  IFNULL(SUM(B.time_spent_seconds),
+    0) AS working_time_sec,
+  IFNULL(SUM(C.time_spent_seconds),
+    0) AS outside_working_time_sec,
+  IFNULL(SUM(B.time_spent_seconds),
+    0) + IFNULL(SUM(C.time_spent_seconds),
+    0) AS total_time_sec,
+  A.dayofweek
+FROM
+  `fast-archive-274910.dw_datadriver.datadriver_vw_bd_calendar_days` A
+LEFT OUTER JOIN (
+  SELECT
+    DATE(TIMESTAMP_MILLIS(date_timestamp_millis),"Asia/Seoul") AS date,
+    SUM(time_spent_seconds) AS time_spent_seconds
+  FROM
+    `fast-archive-274910.dw_datadriver.rescuetime_tbl_bd_data`
+  WHERE
+    productivity_string LIKE "%productive%"
+    AND EXTRACT(DAYOFWEEK
+    FROM
+      DATE(TIMESTAMP_MILLIS(date_timestamp_millis),"Asia/Seoul")) IN(2,
+      3,
+      4,
+      5,
+      6)
+    AND EXTRACT(HOUR
+    FROM
+      DATETIME(TIMESTAMP_MILLIS(date_timestamp_millis),
+        "Asia/Seoul")) >= 9
+    AND EXTRACT(HOUR
+    FROM
+      DATETIME(TIMESTAMP_MILLIS(date_timestamp_millis),
+        "Asia/Seoul")) <= 19
+    AND user_id = 'maayalee'
+  GROUP BY
+    date ) B
+ON
+  A.date = B.date
+LEFT OUTER JOIN (
+  SELECT
+    DATE(TIMESTAMP_MILLIS(date_timestamp_millis),"Asia/Seoul") AS date,
+    SUM(time_spent_seconds) AS time_spent_seconds
+  FROM
+    `fast-archive-274910.dw_datadriver.rescuetime_tbl_bd_data`
+  WHERE
+    productivity_string LIKE "%productive%"
+    AND NOT(EXTRACT(DAYOFWEEK
+      FROM
+        DATE(TIMESTAMP_MILLIS(date_timestamp_millis),"Asia/Seoul")) IN(2,
+        3,
+        4,
+        5,
+        6)
+      AND EXTRACT(HOUR
+      FROM
+        DATETIME(TIMESTAMP_MILLIS(date_timestamp_millis),
+          "Asia/Seoul")) >= 9
+      AND EXTRACT(HOUR
+      FROM
+        DATETIME(TIMESTAMP_MILLIS(date_timestamp_millis),
+          "Asia/Seoul")) <= 19)
+    AND user_id = 'maayalee'
+  GROUP BY
+    date ) C
+ON
+  A.date = C.date
+GROUP BY
+  A.date,
+  A.date_year_month,
+  A.dayofweek
+ORDER BY
+  date DESC

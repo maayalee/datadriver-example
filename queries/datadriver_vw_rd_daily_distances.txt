@@ -1,0 +1,25 @@
+SELECT
+  A.date,
+  A.date_year_month,
+  CAST(IFNULL(SUM(B.value0_fpVal),
+      0) AS INT64) AS distance
+FROM
+  `fast-archive-274910.dw_datadriver.datadriver_vw_bd_calendar_days` A
+LEFT OUTER JOIN (
+  SELECT
+    DATE(TIMESTAMP_MILLIS(CAST((startTimeNanos / 1000000) AS INT64)),"Asia/Seoul") AS date,
+    user_id,
+    value0_intVal,
+    value0_fpVal
+  FROM
+    `fast-archive-274910.dw_datadriver.googlefitness_tbl_bd_aggregated_datasets`
+  WHERE
+    dataTypeName = 'com.google.distance.delta'
+    AND user_id = 'maayalee' ) B
+ON
+  A.date = B.date
+GROUP BY
+  A.date,
+  A.date_year_month
+ORDER BY
+  date DESC

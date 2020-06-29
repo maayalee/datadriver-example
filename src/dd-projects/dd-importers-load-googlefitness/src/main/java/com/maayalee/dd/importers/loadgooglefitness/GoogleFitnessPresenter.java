@@ -32,10 +32,10 @@ public class GoogleFitnessPresenter {
   
   private DatasourcesModel datasources;
   private DatasetsModel datasets;
-  private AggregateDatasetsModel aggregatedDatasetsModel;
+  private AggregatedDatasetsModel aggregatedDatasetsModel;
   private SessionsModel sessions;
 
-  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, AggregateDatasetsModel aggregatedDatasets, SessionsModel sessions) {
+  public GoogleFitnessPresenter(DatasourcesModel datasources, DatasetsModel datasets, AggregatedDatasetsModel aggregatedDatasets, SessionsModel sessions) {
     this.datasources = datasources;
     this.datasets = datasets;
     this.aggregatedDatasetsModel = aggregatedDatasets;

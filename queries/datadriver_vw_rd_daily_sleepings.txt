@@ -1,0 +1,47 @@
+SELECT
+  A.date,
+  A.date_year_month,
+  MAX(B.sleep_sec) AS sleep_sec,
+  MAX(B.sleep_hour) AS sleep_hour
+FROM
+  `fast-archive-274910.dw_datadriver.datadriver_vw_bd_calendar_days` A
+LEFT OUTER JOIN (
+  SELECT
+    C.date,
+    SUM(CAST((REMOVE_DUPLICATE_ROWS.endTimeMillis - REMOVE_DUPLICATE_ROWS.startTimeMillis)/1000 AS FLOAT64)) AS sleep_sec,
+    SUM(CAST((REMOVE_DUPLICATE_ROWS.endTimeMillis - REMOVE_DUPLICATE_ROWS.startTimeMillis)/3600000 AS FLOAT64)) AS sleep_hour,
+    REMOVE_DUPLICATE_ROWS.application_packageName
+  FROM
+    `fast-archive-274910.dw_datadriver.datadriver_vw_bd_calendar_days` C
+  LEFT OUTER JOIN (
+    SELECT
+      DATE(TIMESTAMP_ADD(TIMESTAMP_MILLIS(startTimeMillis), INTERVAL 5 HOUR), "Asia/Seoul") AS date,
+      user_id,
+      startTimeMillis,
+      endTimeMillis,
+      application_packageName
+    FROM
+      `fast-archive-274910.dw_datadriver.googlefitness_tbl_bd_sessions`
+    WHERE
+      (activityType = 109
+        OR activityType = 111
+        OR activityType = 72)
+      AND user_id = 'maayalee'
+    GROUP BY
+      user_id,
+      startTimeMillis,
+      endTimeMillis,
+      application_packageName ) REMOVE_DUPLICATE_ROWS
+  ON
+    C.date = remove_duplicate_rows.date
+  GROUP BY
+    C.date,
+    C.date_year_month,
+    REMOVE_DUPLICATE_ROWS.application_packageName ) B
+ON
+  A.date = B.date
+GROUP BY
+  A.date,
+  A.date_year_month
+ORDER BY
+  A.date DESC

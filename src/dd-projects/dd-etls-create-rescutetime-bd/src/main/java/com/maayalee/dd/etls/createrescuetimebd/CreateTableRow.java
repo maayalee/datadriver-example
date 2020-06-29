@@ -31,8 +31,7 @@ class CreateTableRow extends DoFn<String, TableRow> {
         JsonFlattener flattener = new JsonFlattener(jsonString).withStringEscapePolicy(StringEscapePolicy.DEFAULT);
         Map<String, Object> flattenJson = flattener.flattenAsMap();
         for (Map.Entry<String, Object> entry : flattenJson.entrySet()) {
-          //String key = entry.getKey().replaceAll("[ .]", "_").replaceAll("[ \\[\\]]", "").replaceAll("[ \\(\\)]", "");
-          String key = entry.getKey().replace(".", "_").replaceAll("[\\[\\]]", "");
+          String key = entry.getKey().replace(".", "_").replaceAll("[\\[\\]\\(\\)]", "");
           Object value = entry.getValue();
           LOG.info("Key : " + key + " Value : " + value);
 

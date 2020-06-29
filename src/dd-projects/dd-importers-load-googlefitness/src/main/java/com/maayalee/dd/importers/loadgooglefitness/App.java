@@ -123,7 +123,7 @@ public class App {
 
       DatasourcesModel datasources = new DatasourcesModel(userId);
       DatasetsModel datasets = new DatasetsModel(userId);
-      AggregateDatasetsModel aggregatedDatasets = new AggregateDatasetsModel(userId);
+      AggregatedDatasetsModel aggregatedDatasets = new AggregatedDatasetsModel(userId);
       SessionsModel sessions = new SessionsModel(userId);
       GoogleFitnessPresenter presetner = new GoogleFitnessPresenter(datasources, datasets, aggregatedDatasets, sessions);
       presetner.load(beginTime, endTime, credential.getAccessToken());

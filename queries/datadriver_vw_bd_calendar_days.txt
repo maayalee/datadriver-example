@@ -1,0 +1,29 @@
+SELECT
+  date,
+  FORMAT_DATE("%Y-%m", date) AS date_year_month,
+  EXTRACT(ISOYEAR
+  FROM
+    date) AS isoyear,
+  EXTRACT(ISOWEEK
+  FROM
+    date) AS isoweek,
+  EXTRACT(YEAR
+  FROM
+    date) AS year,
+  EXTRACT(MONTH
+  FROM
+    date) AS month,
+  EXTRACT(WEEK
+  FROM
+    date) AS week,
+  EXTRACT(DAYOFWEEK
+  FROM
+    date) AS dayofweek,
+  EXTRACT(QUARTER
+  FROM
+    date) AS quarter,
+  'Asia/Seoul' AS timezone
+FROM
+  UNNEST(GENERATE_DATE_ARRAY('2018-07-01',DATE_ADD(CURRENT_DATE('Asia/Seoul'), INTERVAL -1 DAY))) AS date
+ORDER BY
+  date DESC;
