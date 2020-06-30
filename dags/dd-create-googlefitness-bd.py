@@ -12,7 +12,7 @@ datalake_gs = 'gs://datadriver-datalake-fast-archive-274910'
 user_id = 'maayalee'
 
 default_dag_args = {
-        'start_date': datetime(2018, 7, 1),
+        'start_date': datetime(2020, 7, 1),
         'dataflow_default_options': {
             'project': project_id,
             'region':'asia-northeast1',

@@ -13,7 +13,7 @@ user_id = 'maayalee'
 api_key = 'B63lJwmLgMWhDcvVf9nmVUtwtVVagWPrZmgFiBF9'
 
 default_dag_args = {
-        'start_date': datetime(2018, 7, 1),
+        'start_date': datetime(2020, 7, 1),
         'dataflow_default_options': {
             'project': project_id,
             'region':'asia-northeast1',
