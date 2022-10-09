@@ -27,7 +27,8 @@ public class GoogleFitnessPresenter {
       "com.google.step_count.delta",
       "com.google.distance.delta",
       "com.google.calories.expended",
-      "com.google.heart_rate.bpm",
+      // not support
+      //"com.google.heart_rate.bpm", 
   };
   
   private DatasourcesModel datasources;
@@ -49,6 +50,7 @@ public class GoogleFitnessPresenter {
     
     datasources.load(request("https://www.googleapis.com/fitness/v1/users/me/dataSources", accessToken));
     
+    
     long begin = DateTime.parseRfc3339(beginTime).getValue() * 1000000;
     long end = DateTime.parseRfc3339(endTime).getValue() * 1000000;
     for (JsonElement source : datasources.getDatasources()) {
@@ -59,6 +61,7 @@ public class GoogleFitnessPresenter {
           URLEncoder.encode(dataStreamId, "utf-8"), begin, end);
       datasets.load(request(url, accessToken));
     }
+    
    
     for (int i = 0; i < aggregateDataTypeNames.length; ++i) {
       // 타임존에 따른 조회를 위해 30분 단위로 가져온다.
